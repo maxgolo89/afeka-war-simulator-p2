@@ -1,12 +1,6 @@
 package program;
 
-import java.sql.Date;
 import java.util.Scanner;
-
-import db.dal.SqlCrud;
-import db.dal.entities.IWarModelEntity;
-import db.dal.entities.WarModelSqlEntity;
-import ui.App;
 
 
 public class Program implements IConstants {
@@ -21,7 +15,7 @@ public class Program implements IConstants {
 //			javafx.application.Application.launch(App.class);
 //		else
 //			new ConsoleView().init();
-
-		javafx.application.Application.launch(App.class);
+//		ICrud sql = new SqlCrud();
+//		javafx.application.Application.launch(App.class);
 	}
 }

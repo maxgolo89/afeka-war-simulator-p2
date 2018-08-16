@@ -1,4 +1,6 @@
-package db.dal.entities;
+package db.dal.entities.sql;
+import db.dal.entities.IMissileEntity;
+import db.dal.entities.IMissileLauncherEntity;
 import db.dal.entities.sqlpk.MissilePK;
 
 import javax.persistence.*;
@@ -33,8 +35,11 @@ public class MissileSqlEntity implements IMissileEntity, Serializable {
     @Column(name="is_destructed")
     private boolean                         isDestructed;
     @ManyToOne
-    @JoinColumn(name="missile_launcher_id")
-    private IMissileLauncherEntity          missileLauncherEntity;
+    @JoinColumns({
+            @JoinColumn(name="missile_launcher_id", referencedColumnName = "id"),
+            @JoinColumn(name="missile_launcher_war_model_id", referencedColumnName = "war_model_id")
+    })
+    private MissileLauncherSqlEntity        missileLauncherEntity;
 
     public MissileSqlEntity() { /* DEFAULT */}
 
@@ -117,6 +122,6 @@ public class MissileSqlEntity implements IMissileEntity, Serializable {
     }
 
     public void setMissileLauncherEntity(IMissileLauncherEntity missileLauncherEntity) {
-        this.missileLauncherEntity = missileLauncherEntity;
+        this.missileLauncherEntity = (MissileLauncherSqlEntity) missileLauncherEntity;
     }
 }

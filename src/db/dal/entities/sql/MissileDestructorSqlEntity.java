@@ -1,9 +1,12 @@
-package db.dal.entities;
+package db.dal.entities.sql;
 
+import db.dal.entities.IMissileDestructorEntity;
+import db.dal.entities.IMissileEntity;
 import db.dal.entities.sqlpk.MissileDestructorPK;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /** *************************************************************************************
@@ -16,14 +19,14 @@ import java.util.List;
 @IdClass(MissileDestructorPK.class)
 public class MissileDestructorSqlEntity implements IMissileDestructorEntity, Serializable {
     @Id
-    @Column
+    @Column(name="id")
     private String                          id;
     @Id
-    @Column
+    @Column(name="war_model_id")
     private long                            warModelId;
-    @Column
-    @OneToMany
-    private List<IMissileEntity>            missiles;
+    @Column(name="missile_id")
+    @ManyToMany
+    private List<MissileSqlEntity>          missiles;
 
     public MissileDestructorSqlEntity() { /* DEFAULT */ }
 
@@ -49,12 +52,15 @@ public class MissileDestructorSqlEntity implements IMissileDestructorEntity, Ser
 
     @Override
     public List<IMissileEntity> getMissiles() {
-        return missiles;
+        return new ArrayList<>(missiles);
     }
 
     @Override
     public void setMissiles(List<IMissileEntity> missiles) {
-        this.missiles = missiles;
+        if(this.missiles == null)
+            this.missiles = new ArrayList<>();
+        for(IMissileEntity m : missiles)
+            this.missiles.add((MissileSqlEntity) m);
     }
 
     @Override

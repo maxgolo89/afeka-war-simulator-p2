@@ -4,6 +4,7 @@ import bl.LauncherDestructor;
 import db.dal.commons.CrudConstants;
 import db.dal.commons.NotImplemented;
 import db.dal.entities.*;
+import db.dal.entities.sql.*;
 import db.dal.entities.sqlpk.LauncherDestructorPK;
 import db.dal.entities.sqlpk.MissileDestructorPK;
 import db.dal.entities.sqlpk.MissileLauncherPK;
@@ -17,7 +18,6 @@ import org.apache.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import org.hibernate.query.Query;
 
 public class SqlCrud implements ICrud {
     private Logger logger = Logger.getLogger(SqlCrud.class);
@@ -549,55 +549,195 @@ public class SqlCrud implements ICrud {
      ** UPDATE OPERATIONS **
      ***********************/
     @Override
-    public long updateWarModel(IWarModelEntity warModelEntity) {
-        return 0;
+    public boolean updateWarModel(IWarModelEntity warModelEntity) {
+        Session session = factory.openSession();
+        Transaction tx = null;
+        boolean flag = true;
+        try {
+            session.update((WarModelSqlEntity)warModelEntity);
+            tx.commit();
+        } catch(Exception ex) {
+            if (tx != null)
+                tx.rollback();
+            flag = false;
+            logger.error(ex);
+        } finally {
+            session.close();
+            return flag;
+        }
     }
 
     @Override
-    public String updateMissile(IMissileEntity missile) {
-        return null;
+    public boolean updateMissile(IMissileEntity missile) {
+        Session session = factory.openSession();
+        Transaction tx = null;
+        boolean flag = true;
+        try {
+            session.saveOrUpdate((MissileSqlEntity)missile);
+            tx.commit();
+        } catch(Exception ex) {
+            if (tx != null)
+                tx.rollback();
+            flag = false;
+            logger.error(ex);
+        } finally {
+            session.close();
+            return flag;
+        }
     }
 
     @Override
-    public String updateMissileLauncher(IMissileLauncherEntity missileLauncher) {
-        return null;
+    public boolean updateMissileLauncher(IMissileLauncherEntity missileLauncher) {
+        Session session = factory.openSession();
+        Transaction tx = null;
+        boolean flag = true;
+        try {
+            session.saveOrUpdate((MissileLauncherSqlEntity)missileLauncher);
+            tx.commit();
+        } catch(Exception ex) {
+            if (tx != null)
+                tx.rollback();
+            flag = false;
+            logger.error(ex);
+        } finally {
+            session.close();
+            return flag;
+        }
     }
 
     @Override
-    public String updateMissileDestructor(IMissileDestructorEntity missileDestructorSqlEntity) {
-        return null;
+    public boolean updateMissileDestructor(IMissileDestructorEntity missileDestructorEntity) {
+        Session session = factory.openSession();
+        Transaction tx = null;
+        boolean flag = true;
+        try {
+            session.saveOrUpdate((MissileDestructorSqlEntity)missileDestructorEntity);
+            tx.commit();
+        } catch(Exception ex) {
+            if (tx != null)
+                tx.rollback();
+            flag = false;
+            logger.error(ex);
+        } finally {
+            session.close();
+            return flag;
+        }
     }
 
     @Override
-    public String updateLauncherDestructor(ILauncherDestructorEntity launcherDestructorSqlEntity) {
-        return null;
+    public boolean updateLauncherDestructor(ILauncherDestructorEntity launcherDestructorEntity) {
+        Session session = factory.openSession();
+        Transaction tx = null;
+        boolean flag = true;
+        try {
+            session.saveOrUpdate((LauncherDestructorSqlEntity)launcherDestructorEntity);
+            tx.commit();
+        } catch(Exception ex) {
+            if (tx != null)
+                tx.rollback();
+            flag = false;
+            logger.error(ex);
+        } finally {
+            session.close();
+            return flag;
+        }
     }
 
     /***********************
      ** DELETE OPERATIONS **
      ***********************/
     @Override
-    public long deleteWarModel(IWarModelEntity warModelSqlEntity) {
-        return 0;
+    public boolean deleteWarModel(IWarModelEntity warModelEntity) {
+        Session session = factory.openSession();
+        Transaction tx = null;
+        boolean flag = true;
+        try {
+            session.delete((WarModelSqlEntity)warModelEntity);
+            tx.commit();
+        } catch(Exception ex) {
+            if (tx != null)
+                tx.rollback();
+            flag = false;
+            logger.error(ex);
+        } finally {
+            session.close();
+            return flag;
+        }
     }
 
     @Override
-    public String deleteMissile(IMissileEntity missile) {
-        return null;
+    public boolean deleteMissile(IMissileEntity missile) {
+        Session session = factory.openSession();
+        Transaction tx = null;
+        boolean flag = true;
+        try {
+            session.delete((MissileSqlEntity)missile);
+            tx.commit();
+        } catch(Exception ex) {
+            if (tx != null)
+                tx.rollback();
+            flag = false;
+            logger.error(ex);
+        } finally {
+            session.close();
+            return flag;
+        }
     }
 
     @Override
-    public String deleteMissileLauncher(IMissileLauncherEntity missileLauncher) {
-        return null;
+    public boolean deleteMissileLauncher(IMissileLauncherEntity missileLauncher) {
+        Session session = factory.openSession();
+        Transaction tx = null;
+        boolean flag = true;
+        try {
+            session.delete((MissileLauncherSqlEntity)missileLauncher);
+            tx.commit();
+        } catch(Exception ex) {
+            if (tx != null)
+                tx.rollback();
+            flag = false;
+            logger.error(ex);
+        } finally {
+            session.close();
+            return flag;
+        }
     }
 
     @Override
-    public String deleteMissileDestructor(IMissileDestructorEntity missileDestructorSqlEntity) {
-        return null;
+    public boolean deleteMissileDestructor(IMissileDestructorEntity missileDestructorEntity) {
+        Session session = factory.openSession();
+        Transaction tx = null;
+        boolean flag = true;
+        try {
+            session.delete((MissileDestructorSqlEntity)missileDestructorEntity);
+            tx.commit();
+        } catch(Exception ex) {
+            if (tx != null)
+                tx.rollback();
+            flag = false;
+            logger.error(ex);
+        } finally {
+            session.close();
+            return flag;
+        }
     }
 
     @Override
-    public String deleteLauncherDestructor(ILauncherDestructorEntity launcherDestructorSqlEntity) {
-        return null;
+    public boolean deleteLauncherDestructor(ILauncherDestructorEntity launcherDestructorEntity) {
+        Session session = factory.openSession();
+        Transaction tx = null;
+        boolean flag = true;
+        try {
+            session.delete((LauncherDestructorSqlEntity)launcherDestructorEntity);
+            tx.commit();
+        } catch(Exception ex) {
+            if (tx != null)
+                tx.rollback();
+            flag = false;
+            logger.error(ex);
+        } finally {
+            session.close();
+            return flag;
+        }
     }
 }

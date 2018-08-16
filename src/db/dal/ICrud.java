@@ -71,35 +71,35 @@ public interface ICrud {
      ** UPDATE OPERATIONS **
      ***********************/
     /* *** WarModelEntity *** */
-    long updateWarModel(IWarModelEntity warModelSqlEntity);
+    boolean updateWarModel(IWarModelEntity warModelSqlEntity);
 
     /* *** MissileEntity *** */
-    String updateMissile(IMissileEntity missile);
+    boolean updateMissile(IMissileEntity missile);
 
     /* *** MissileLauncherEntity *** */
-    String updateMissileLauncher(IMissileLauncherEntity missileLauncher);
+    boolean updateMissileLauncher(IMissileLauncherEntity missileLauncher);
 
     /* *** MissileDestructorEntity *** */
-    String updateMissileDestructor(IMissileDestructorEntity missileDestructorSqlEntity);
+    boolean updateMissileDestructor(IMissileDestructorEntity missileDestructorSqlEntity);
 
     /* *** LauncherDestructorEntity *** */
-    String updateLauncherDestructor(ILauncherDestructorEntity launcherDestructorSqlEntity);
+    boolean updateLauncherDestructor(ILauncherDestructorEntity launcherDestructorSqlEntity);
 
     /***********************
      ** DELETE OPERATIONS **
      ***********************/
     /* *** WarModelEntity *** */
-    long deleteWarModel(IWarModelEntity warModelSqlEntity);
+    boolean deleteWarModel(IWarModelEntity warModelSqlEntity);
 
     /* *** MissileEntity *** */
-    String deleteMissile(IMissileEntity missile);
+    boolean deleteMissile(IMissileEntity missile);
 
     /* *** MissileLauncherEntity *** */
-    String deleteMissileLauncher(IMissileLauncherEntity missileLauncher);
+    boolean deleteMissileLauncher(IMissileLauncherEntity missileLauncher);
 
     /* *** MissileDestructorEntity *** */
-    String deleteMissileDestructor(IMissileDestructorEntity missileDestructorSqlEntity);
+    boolean deleteMissileDestructor(IMissileDestructorEntity missileDestructorSqlEntity);
 
     /* *** LauncherDestructorEntity *** */
-    String deleteLauncherDestructor(ILauncherDestructorEntity launcherDestructorSqlEntity);
+    boolean deleteLauncherDestructor(ILauncherDestructorEntity launcherDestructorSqlEntity);
 }

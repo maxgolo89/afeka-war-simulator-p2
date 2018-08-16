@@ -1,9 +1,13 @@
-package db.dal.entities;
+package db.dal.entities.sql;
 
+import db.dal.entities.ILauncherDestructorEntity;
+import db.dal.entities.IMissileLauncherEntity;
+import db.dal.entities.LauncherDestructorTypeEnum;
 import db.dal.entities.sqlpk.LauncherDestructorPK;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /** *************************************************************************************
@@ -16,16 +20,16 @@ import java.util.List;
 @IdClass(LauncherDestructorPK.class)
 public class LauncherDestructorSqlEntity implements ILauncherDestructorEntity, Serializable {
     @Id
-    @Column
+    @Column(name="id")
     private String                          id;
     @Id
-    @Column
+    @Column(name="war_model_id")
     private long                            warModelId;
-    @Column
-    private LauncherDestructorTypeEnum      type;
-    @Column
-    @OneToMany
-    private List<IMissileLauncherEntity>    missileLauncherEntityList;
+    @Column(name="type")
+    private LauncherDestructorTypeEnum type;
+    @Column(name="missile_launcher_id")
+    @ManyToMany
+    private List<MissileLauncherSqlEntity>  missileLauncherEntityList;
 
     public LauncherDestructorSqlEntity() { /* DEFAULT */ }
 
@@ -61,12 +65,15 @@ public class LauncherDestructorSqlEntity implements ILauncherDestructorEntity, S
 
     @Override
     public List<IMissileLauncherEntity> getMissileLauncherEntityList() {
-        return missileLauncherEntityList;
+        return new ArrayList<>(missileLauncherEntityList);
     }
 
     @Override
     public void setMissileLauncherEntityList(List<IMissileLauncherEntity> missileLauncherEntityList) {
-        this.missileLauncherEntityList = missileLauncherEntityList;
+        if(this.missileLauncherEntityList == null)
+            this.missileLauncherEntityList = new ArrayList<>();
+        for(IMissileLauncherEntity m : missileLauncherEntityList)
+            this.missileLauncherEntityList.add((MissileLauncherSqlEntity) m);
     }
 
     @Override

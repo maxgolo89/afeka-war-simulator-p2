@@ -1,4 +1,6 @@
-package db.dal.entities;
+package db.dal.entities.sql;
+
+import db.dal.entities.IWarModelEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;
