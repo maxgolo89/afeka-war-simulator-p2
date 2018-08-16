@@ -1,0 +1,27 @@
+package program;
+
+import java.sql.Date;
+import java.util.Scanner;
+
+import db.dal.SqlCrud;
+import db.dal.entities.IWarModelEntity;
+import db.dal.entities.WarModelSqlEntity;
+import ui.App;
+
+
+public class Program implements IConstants {
+
+	static Scanner s = new Scanner(System.in);
+	
+	public static void main(String[] args) {
+		
+//		System.out.println(CONSOLE_OR_JFX);
+//		
+//		if ( s.nextInt() != 1 )
+//			javafx.application.Application.launch(App.class);
+//		else
+//			new ConsoleView().init();
+
+		javafx.application.Application.launch(App.class);
+	}
+}
