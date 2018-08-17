@@ -7,6 +7,7 @@ public interface WarModelEventsListener {
 	void addMissileLauncherInModel(String id, boolean isHidden);
 	void addMissileDestructorInModel(String id);
 	void addLauncherDestructorInModel(String id, LauncherDestructorType type) ;
+	void addMissileLaunchInModel(String launcherID, String missileID, int potentialDamage, String destination, int flyTime);
 	
 	void launcherStateChangedInModel(String launcherID, boolean isHidden);
 	

@@ -80,7 +80,12 @@ public class WarController implements WarModelEventsListener, WarUIEventsListene
 		for ( WarUI view : warView)
 			view.showAddLauncherDestructor(id, type);
 	}
-	
+
+	@Override
+	public void addMissileLaunchInModel(String launcherID, String missileID, int potentialDamage, String destination, int flyTime) {
+		/* DO NOTHING */
+	}
+
 	public void startMissileLaunchInModel(String launcherID, String missileID, int flyTime, String destination) {
 		for ( WarUI view : warView)
 			view.showStartMissileLaunch( launcherID, missileID, flyTime, destination );

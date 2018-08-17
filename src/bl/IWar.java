@@ -8,6 +8,7 @@ public interface IWar {
 	void addMissileDestructor(String id);
 	void addLauncherDestructor(String destructorID, LauncherDestructorType type);
 
+	void addMissileLaunch(String launcherID, String missileID, int potentialDamage, String destination, int flyTime);
 	void addMissileDestruct(String destructorID, String missileID);
 	void addLauncherDestruct(String destructorID, String launcherID);
 	

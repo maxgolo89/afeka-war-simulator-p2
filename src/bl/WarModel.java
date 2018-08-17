@@ -36,7 +36,7 @@ public class WarModel implements IWar, BLConstants, IConstants {
 
 	public static WarModel getInstance(){
 		if (war == null)
-			war = new WarModelV2();
+			war = new WarModel();
 		return war;
 	}
 
@@ -87,6 +87,7 @@ public class WarModel implements IWar, BLConstants, IConstants {
 		Missile m = new Missile(missileID, potentialDamage, destination, flyTime, launcher);
 		launcher.addMissileToLaunchQueue(m);
 		allMissiles.add(m);
+		fireAddMissileLaunch(launcherID, missileID, potentialDamage, destination, flyTime);
 	}
     /*  *****************************************************************************************
 	 * 		END OF ADD WAR OBJECT
@@ -194,7 +195,12 @@ public class WarModel implements IWar, BLConstants, IConstants {
 	public void registerListener(WarModelEventsListener listener) {
 		allListeners.add(listener);
 	}
-	
+
+	protected void fireAddMissileLaunch(String launcherID, String missileID, int potentialDamage, String destination, int flyTime) {
+		for (WarModelEventsListener l : allListeners)
+			l.addMissileLaunchInModel(launcherID, missileID, potentialDamage, destination, flyTime);
+	}
+
 	// fire to controller
 	protected void fireAddMissileLuncherEvent(String id, boolean isHidden) {
 		for (WarModelEventsListener l : allListeners)
