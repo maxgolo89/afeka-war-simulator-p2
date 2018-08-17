@@ -11,6 +11,13 @@ public abstract class WarObject implements Runnable, BLConstants{
 	
 	protected WarLogsGenerator 	logsGen = WarLogsGenerator.getInstance();
 
+	public WarObject() {
+		inWar = true;
+		waitingForWork = false;
+
+		logsGen.addWarObject(this);
+	}
+
 	public WarObject(String id, WarModel war){
 		this.id = id;
 		this.war = war;
@@ -61,5 +68,44 @@ public abstract class WarObject implements Runnable, BLConstants{
 			return false;
 		return true;
 	}
-	
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public boolean isInWar() {
+		return inWar;
+	}
+
+	public void setInWar(boolean inWar) {
+		this.inWar = inWar;
+	}
+
+	public boolean isWaitingForWork() {
+		return waitingForWork;
+	}
+
+	public void setWaitingForWork(boolean waitingForWork) {
+		this.waitingForWork = waitingForWork;
+	}
+
+	public WarModel getWar() {
+		return war;
+	}
+
+	public void setWar(WarModel war) {
+		this.war = war;
+	}
+
+	public WarLogsGenerator getLogsGen() {
+		return logsGen;
+	}
+
+	public void setLogsGen(WarLogsGenerator logsGen) {
+		this.logsGen = logsGen;
+	}
 }

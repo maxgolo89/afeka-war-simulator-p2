@@ -16,7 +16,11 @@ public class Missile extends Thread implements BLConstants {
 	
 	private MissileLauncher launcher;
 
-	
+
+	public Missile() {
+		super();
+	}
+
 	public Missile(String id, int potentialDamage, String destination, int flyTime, MissileLauncher launcher) {
 		this.id = id;
 		this.potentialDamage = potentialDamage;
@@ -102,4 +106,48 @@ public class Missile extends Thread implements BLConstants {
 		return true;
 	}
 
+	public boolean isDone() {
+		return isDone;
+	}
+
+	public void setDone(boolean done) {
+		isDone = done;
+	}
+
+	public int getPotentialDamage() {
+		return potentialDamage;
+	}
+
+	public void setPotentialDamage(int potentialDamage) {
+		this.potentialDamage = potentialDamage;
+	}
+
+	public MissileLauncher getLauncher() {
+		return launcher;
+	}
+
+	public void setLauncher(MissileLauncher launcher) {
+		this.launcher = launcher;
+	}
+
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setDestination(String destination) {
+		this.destination = destination;
+	}
+
+	public void setFlyTime(int flyTime) {
+		this.flyTime = flyTime;
+	}
+
+	public void setDamage(int damage) {
+		this.damage = damage;
+	}
+
+	public void setDestructed(boolean destructed) {
+		isDestructed = destructed;
+	}
 }

@@ -7,7 +7,9 @@ public class MissileLauncher extends WarObject{
 	
 	private boolean			isDestructed;
 	private Queue<Missile>	missilesToLaunch = new LinkedList<>();
-	
+
+	public MissileLauncher() {}
+
 	public MissileLauncher(String id, WarModel war){
 		super(id, war);
 		isDestructed = false;
@@ -87,4 +89,18 @@ public class MissileLauncher extends WarObject{
 			return false;
 		return true;
 	}
+
+	public void setDestructed(boolean destructed) {
+		isDestructed = destructed;
+	}
+
+	public Queue<Missile> getMissilesToLaunch() {
+		return missilesToLaunch;
+	}
+
+	public void setMissilesToLaunch(Queue<Missile> missilesToLaunch) {
+		this.missilesToLaunch = missilesToLaunch;
+	}
+
+
 }

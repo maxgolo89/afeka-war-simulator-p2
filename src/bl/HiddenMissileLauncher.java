@@ -7,9 +7,12 @@ import java.util.TimerTask;
 public class HiddenMissileLauncher extends MissileLauncher {
 
 	private boolean	isHiddenNow; 
-	private boolean	isLaunching; 
-	
-	
+	private boolean	isLaunching;
+
+	public HiddenMissileLauncher() {
+		super();
+	}
+
 	public HiddenMissileLauncher(String id, WarModel war) {
 		super(id, war);
 		isHiddenNow = true;
@@ -53,5 +56,21 @@ public class HiddenMissileLauncher extends MissileLauncher {
 	
 	public boolean isHidden(){
 		return true;
+	}
+
+	public boolean isHiddenNow() {
+		return isHiddenNow;
+	}
+
+	public void setHiddenNow(boolean hiddenNow) {
+		isHiddenNow = hiddenNow;
+	}
+
+	public boolean isLaunching() {
+		return isLaunching;
+	}
+
+	public void setLaunching(boolean launching) {
+		isLaunching = launching;
 	}
 }

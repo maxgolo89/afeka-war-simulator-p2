@@ -8,7 +8,7 @@ import program.IConstants;
 
 public class WarModel implements IWar, BLConstants, IConstants {
 
-	private static WarModel 				war;
+	protected static WarModel 				war;
 
 	private LocalTime 						startTime;
 	private WarTime							warTime;
@@ -28,7 +28,7 @@ public class WarModel implements IWar, BLConstants, IConstants {
 
 	private int i = 1;
 	
-	private WarModel() {
+	protected WarModel() {
 		startTime = java.time.LocalTime.now();
 		warTime = new WarTime();
 		warTime.startTimer();
@@ -36,7 +36,7 @@ public class WarModel implements IWar, BLConstants, IConstants {
 
 	public static WarModel getInstance(){
 		if (war == null)
-			war = new WarModel();
+			war = new WarModelV2();
 		return war;
 	}
 
@@ -196,24 +196,24 @@ public class WarModel implements IWar, BLConstants, IConstants {
 	}
 	
 	// fire to controller
-	private void fireAddMissileLuncherEvent(String id, boolean isHidden) {
+	protected void fireAddMissileLuncherEvent(String id, boolean isHidden) {
 		for (WarModelEventsListener l : allListeners)
 			l.addMissileLauncherInModel(id, isHidden);
 	}
 
-	private void fireAddMissileDestructorEvent(String id) {
+	protected void fireAddMissileDestructorEvent(String id) {
 		for (WarModelEventsListener l : allListeners) {
 			l.addMissileDestructorInModel(id);
 		}
 	}
 
-	private void fireAddLauncherDestructorEvent(String id, LauncherDestructorType type) {
+	protected void fireAddLauncherDestructorEvent(String id, LauncherDestructorType type) {
 		for (WarModelEventsListener l : allListeners) {
 			l.addLauncherDestructorInModel(id, type);
 		}
 	}
 
-	public void fireStartMissileLaunchEvent(String launcherID, String missileID, String destination, int flyTime) {
+	protected void fireStartMissileLaunchEvent(String launcherID, String missileID, String destination, int flyTime) {
 		for (WarModelEventsListener l : allListeners) 
 			l.startMissileLaunchInModel(launcherID, missileID, flyTime, destination);
 	}
@@ -230,36 +230,36 @@ public class WarModel implements IWar, BLConstants, IConstants {
 		}
 	}
 
-	private void fireStartDestructMissileEvent(String destructorID, String missileID, int duration) {
+	protected void fireStartDestructMissileEvent(String destructorID, String missileID, int duration) {
 		for (WarModelEventsListener l : allListeners) {
 			l.startDestructMissileInModel(destructorID, missileID, duration);
 		}
 	}
 
-	private void fireEndDestructMissileEvent(String destructorID, String missileID, boolean isDestructed) {
+	protected void fireEndDestructMissileEvent(String destructorID, String missileID, boolean isDestructed) {
 		for (WarModelEventsListener l : allListeners) {
 			l.endDestructMissileInModel( destructorID, missileID, isDestructed);
 		}
 	}
 
-	private void fireStartDestructLauncherEvent(String destructorID, String launcherID, int duration) {
+	protected void fireStartDestructLauncherEvent(String destructorID, String launcherID, int duration) {
 		for (WarModelEventsListener l : allListeners) {
 			l.startDestructLauncherInModel(destructorID, launcherID, duration);
 		}
 	}
 
-	private void fireEndDestructLauncherEvent(String destructorID, String launcherID, boolean isDestructed) {
+	protected void fireEndDestructLauncherEvent(String destructorID, String launcherID, boolean isDestructed) {
 		for (WarModelEventsListener l : allListeners) {
 			l.endDestructLauncherInModel(destructorID, launcherID, isDestructed);
 		}
 	}
 
-	private void fireStatisticsEvent(int totalDamage, int launchedMissiles, int hits, int destructedMissiles, int destructedLaunchers, boolean exit) {
+	protected void fireStatisticsEvent(int totalDamage, int launchedMissiles, int hits, int destructedMissiles, int destructedLaunchers, boolean exit) {
 		for (WarModelEventsListener l : allListeners)
 			l.statisticsInModel(totalDamage, launchedMissiles, hits, destructedMissiles, destructedLaunchers, exit);
 	}
-	
-	private void fireExitEvent() {
+
+	protected void fireExitEvent() {
 		for (WarModelEventsListener l : allListeners) {
 			l.exitInModel();
 		}
@@ -322,5 +322,117 @@ public class WarModel implements IWar, BLConstants, IConstants {
 		// 			 + time.getMinute() * 60 - startTime.getMinute() * 60 
 		// 			 + time.getSecond() - startTime.getSecond() - 9;
 		return warTime.getTime();
+	}
+
+	public static WarModel getWar() {
+		return war;
+	}
+
+	public static void setWar(WarModel war) {
+		WarModel.war = war;
+	}
+
+	public LocalTime getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(LocalTime startTime) {
+		this.startTime = startTime;
+	}
+
+	public WarTime getWarTime() {
+		return warTime;
+	}
+
+	public void setWarTime(WarTime warTime) {
+		this.warTime = warTime;
+	}
+
+	public int getHits() {
+		return hits;
+	}
+
+	public void setHits(int hits) {
+		this.hits = hits;
+	}
+
+	public int getTotalDamage() {
+		return totalDamage;
+	}
+
+	public void setTotalDamage(int totalDamage) {
+		this.totalDamage = totalDamage;
+	}
+
+	public int getLaunchedMissiles() {
+		return launchedMissiles;
+	}
+
+	public void setLaunchedMissiles(int launchedMissiles) {
+		this.launchedMissiles = launchedMissiles;
+	}
+
+	public int getDestructedMissiles() {
+		return destructedMissiles;
+	}
+
+	public void setDestructedMissiles(int destructedMissiles) {
+		this.destructedMissiles = destructedMissiles;
+	}
+
+	public int getDestructedLaunchers() {
+		return destructedLaunchers;
+	}
+
+	public void setDestructedLaunchers(int destructedLaunchers) {
+		this.destructedLaunchers = destructedLaunchers;
+	}
+
+	public Vector<Missile> getAllMissiles() {
+		return allMissiles;
+	}
+
+	public void setAllMissiles(Vector<Missile> allMissiles) {
+		this.allMissiles = allMissiles;
+	}
+
+	public Vector<MissileLauncher> getAllLaunchers() {
+		return allLaunchers;
+	}
+
+	public void setAllLaunchers(Vector<MissileLauncher> allLaunchers) {
+		this.allLaunchers = allLaunchers;
+	}
+
+	public Vector<MissileDestructor> getAllMissileDestructors() {
+		return allMissileDestructors;
+	}
+
+	public void setAllMissileDestructors(Vector<MissileDestructor> allMissileDestructors) {
+		this.allMissileDestructors = allMissileDestructors;
+	}
+
+	public Vector<LauncherDestructor> getAllLauncherDestructors() {
+		return allLauncherDestructors;
+	}
+
+	public void setAllLauncherDestructors(Vector<LauncherDestructor> allLauncherDestructors) {
+		this.allLauncherDestructors = allLauncherDestructors;
+	}
+
+	public Vector<WarModelEventsListener> getAllListeners() {
+		return allListeners;
+	}
+
+	public void setAllListeners(Vector<WarModelEventsListener> allListeners) {
+		this.allListeners = allListeners;
+	}
+
+	public int getI() {
+		return i;
+	}
+
+	public void setI(int i) {
+		this.i = i;
 	}
 }

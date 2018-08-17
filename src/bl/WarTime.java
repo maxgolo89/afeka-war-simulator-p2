@@ -24,4 +24,12 @@ public class WarTime implements Runnable{
         Thread.currentThread().interrupt();
         return;
     }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        WarTime.startTime = startTime;
+    }
 }

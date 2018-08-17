@@ -11,7 +11,10 @@ public class LauncherDestructor extends WarObject {
 	private LauncherDestructorType 	type;
 	private Queue<MissileLauncher>	targets = new LinkedList<>();
 
-	
+	public LauncherDestructor() {
+		super();
+	}
+
 	public LauncherDestructor(String id, LauncherDestructorType type, WarModel war) {
 		super(id, war);
 		this.type = type;
@@ -94,4 +97,17 @@ public class LauncherDestructor extends WarObject {
 			return false;
 		return true;
 	}
+
+	public void setType(LauncherDestructorType type) {
+		this.type = type;
+	}
+
+	public Queue<MissileLauncher> getTargets() {
+		return targets;
+	}
+
+	public void setTargets(Queue<MissileLauncher> targets) {
+		this.targets = targets;
+	}
+
 }

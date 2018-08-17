@@ -8,7 +8,11 @@ import java.util.Random;
 public class MissileDestructor extends WarObject {
 
 	private Queue<Missile> targets = new LinkedList<>();
-	
+
+	public MissileDestructor() {
+		super();
+	}
+
 	public MissileDestructor(String id, WarModel war) {
 		super(id, war);
 	}
@@ -73,4 +77,14 @@ public class MissileDestructor extends WarObject {
 			return false;
 		return true;
 	}
+
+	public Queue<Missile> getTargets() {
+		return targets;
+	}
+
+	public void setTargets(Queue<Missile> targets) {
+		this.targets = targets;
+	}
+
+
 }
