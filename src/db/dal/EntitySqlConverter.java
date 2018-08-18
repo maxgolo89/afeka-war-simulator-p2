@@ -5,9 +5,6 @@ import db.dal.entities.*;
 import db.dal.entities.sql.*;
 import program.IConstants;
 
-import java.util.LinkedList;
-
-
 /*************************************************************************************
  *
  * This util intended for converting Application scope object, to persistent classes.
@@ -16,209 +13,95 @@ import java.util.LinkedList;
  * *********************************************************************************** */
 public class EntitySqlConverter implements IEntityConverter {
 
+    /************
+     ** TO DAO **
+     ************/
     @Override
-    public IMissileEntity missileToMissileEntity(Missile missile, long warId) {
-        if(missile == null)
-            return null;
-
-        IMissileEntity missileE = new MissileSqlEntity();
-        missileE.setId(missile.getID());
-        missileE.setDamage(missile.getDamage());
-        missileE.setDestination(missile.getDestination());
-        missileE.setDestructed(missile.isDestructed());
-        missileE.setDone(missile.isDone());
-        missileE.setFlyTime(missile.getFlyTime());
-        missileE.setPotentialDamage(missile.getPotentialDamage());
-        missileE.setMissileLauncherEntity(missileLauncherToMissileLauncherEntity(missile.getLauncher(), warId));
-        missileE.setWarModelId(warId);
-
-        return missileE;
+    public IMissileDao toMissileDao(String id, String destination, int flyTime, int damage, int potentialDamage, boolean isDestructed) {
+        IMissileDao m = new MissileSqlDao();
+        m.setmId(id);
+        m.setDestination(destination);
+        m.setFlyTime(flyTime);
+        m.setDamage(damage);
+        m.setPotentialDamage(potentialDamage);
+        m.setDestructed(isDestructed);
+        return m;
     }
 
     @Override
-    public IMissileDestructorEntity missileDestructorToMissileDestructorEntity(MissileDestructor missileDestructor, long warId) {
-        if(missileDestructor == null)
-            return null;
-
-        IMissileDestructorEntity missileDestructorEntity = new MissileDestructorSqlEntity();
-        missileDestructorEntity.setId(missileDestructor.getID());
-        missileDestructorEntity.setWarModelId(warId);
-        missileDestructorEntity.setMissiles(new LinkedList<>());
-
-        for(Missile m : missileDestructor.getTargets())
-            missileDestructorEntity.getMissiles().add(missileToMissileEntity(m, warId));
-
-        return missileDestructorEntity;
+    public IMissileDestructorDao toMissileDestructorDao(String id) {
+        IMissileDestructorDao md = new MissileDestructorSqlDao();
+        md.setmDId(id);
+        return md;
     }
 
     @Override
-    public IMissileLauncherEntity missileLauncherToMissileLauncherEntity(MissileLauncher missileLauncher, long warId) {
-        if(missileLauncher == null)
-            return null;
-
-        IMissileLauncherEntity missileLauncherEntity = new MissileLauncherSqlEntity();
-        missileLauncherEntity.setId(missileLauncher.getID());
-        missileLauncherEntity.setDestructed(missileLauncher.isDestructed());
-        missileLauncherEntity.setWarModelId(warId);
-//        if(missileLauncher instanceof HiddenMissileLauncher)
-//            missileLauncherEntity.setHidden(true);
-//        else
-        missileLauncherEntity.setHidden(false);
-
-        missileLauncherEntity.setMissiles(new LinkedList<>());
-        for(Missile m : missileLauncher.getMissilesToLaunch())
-            missileLauncherEntity.getMissiles().add(missileToMissileEntity(m, warId));
-
-        return missileLauncherEntity;
-
+    public IMissileLauncherDao toMissileLauncherDao(String id, boolean isDestructed) {
+        IMissileLauncherDao ml = new MissileLauncherSqlDao();
+        ml.setmLId(id);
+        ml.setDestructed(isDestructed);
+        return ml;
     }
 
     @Override
-    public IMissileLauncherEntity hiddenMissileLauncherToMissileLauncherEntity(HiddenMissileLauncher hiddenMissileLauncher, long warId) {
-        if(hiddenMissileLauncher == null)
-            return null;
-
-        IMissileLauncherEntity missileLauncherEntity = new MissileLauncherSqlEntity();
-        missileLauncherEntity.setId(hiddenMissileLauncher.getID());
-        missileLauncherEntity.setDestructed(hiddenMissileLauncher.isDestructed());
-        missileLauncherEntity.setWarModelId(warId);
-//        if(missileLauncher instanceof HiddenMissileLauncher)
-        missileLauncherEntity.setHidden(true);
-//        else
-//        missileLauncherEntity.setHidden(false);
-
-        missileLauncherEntity.setMissiles(new LinkedList<>());
-        for(Missile m : hiddenMissileLauncher.getMissilesToLaunch())
-            missileLauncherEntity.getMissiles().add(missileToMissileEntity(m, warId));
-
-        return missileLauncherEntity;
+    public IHiddenMissileLauncherDao toHiddenMissileLauncherDao(String id, boolean isDestructed, boolean isHiding) {
+        IHiddenMissileLauncherDao hml = new HiddenMissileLauncherSqlDao();
+        hml.setmLId(id);
+        hml.setDestructed(isDestructed);
+        hml.setHiding(isHiding);
+        return hml;
     }
 
     @Override
-    public ILauncherDestructorEntity launcherDestructorToLauncherDestructorEntity(LauncherDestructor launcherDestructor, long warId) {
-        if(launcherDestructor == null)
-            return null;
-
-        ILauncherDestructorEntity launcherDestructorEntity = new LauncherDestructorSqlEntity();
-        launcherDestructorEntity.setId(launcherDestructor.getID());
-        if(launcherDestructor.getType().ordinal() == 0)
-            launcherDestructorEntity.setType((LauncherDestructorTypeEnum.PLANE_E));
-        else
-            launcherDestructorEntity.setType((LauncherDestructorTypeEnum.SHIP_E));
-        launcherDestructorEntity.setWarModelId(warId);
-
-        launcherDestructorEntity.setMissileLauncherEntityList(new LinkedList<>());
-
-        for(MissileLauncher ml : launcherDestructor.getTargets())
-            launcherDestructorEntity.getMissileLauncherEntityList().add(missileLauncherToMissileLauncherEntity(ml, warId));
-
-        return launcherDestructorEntity;
+    public ILauncherDestructorDao toLauncherDestructorDao(String id, IConstants.LauncherDestructorType type) {
+        ILauncherDestructorDao ld = new LauncherDestructorSqlDao();
+        ld.setlDId(id);
+        ld.setType(type == IConstants.LauncherDestructorType.SHIP ? LauncherDestructorTypeEnum.SHIP_E : LauncherDestructorTypeEnum.PLANE_E);
+        return ld;
     }
 
     @Override
-    public IWarModelEntity warModelToWarModelEntity(WarModel warModel) {
-        if(warModel == null)
-            return null;
+    public IWarModelDao toWarModelDao(long id, int hits, int totalDamage, int launchedMissiles, int destructedMissiles, int destructedLaunchers) {
+        IWarModelDao w = new WarModelSqlDao();
+        w.setwMId(id);
+        w.setHits(hits);
+        w.setTotalDamage(totalDamage);
+        w.setLaunchedMissiles(launchedMissiles);
+        w.setDestructedMissiles(destructedMissiles);
+        w.setDestructedLaunchers(destructedLaunchers);
+        return w;
+    }
 
-        IWarModelEntity warModelEntity = new WarModelSqlEntity();
-
-        warModelEntity.setTimeStamp(warModel.getWarTime().getStartTime());
-        warModelEntity.setDestructedLaunchers(warModel.getDestructedLaunchers());
-        warModelEntity.setDestructedMissiles(warModel.getDestructedMissiles());
-        warModelEntity.setHits(warModel.getHits());
-        warModelEntity.setLaunchedMissiles(warModel.getLaunchedMissiles());
-        warModelEntity.setTotalDamage(warModel.getTotalDamage());
-
-        return warModelEntity;
+    /*******************
+     ** TO APP OBJECT **
+     *******************/
+    @Override
+    public Missile toMissileObject(IMissileDao missile) {
+        return null;
     }
 
     @Override
-    public Missile missileEntityToMissileObject(IMissileEntity missile) {
-        if(missile == null)
-            return null;
-
-        Missile rMissile = new Missile();
-        rMissile.setPotentialDamage(missile.getPotentialDamage());
-        rMissile.setDone(missile.isDone());
-        rMissile.setDamage(missile.getDamage());
-        rMissile.setDestination(missile.getDestination());
-        rMissile.setDestructed(missile.isDestructed());
-        rMissile.setFlyTime(missile.getFlyTime());
-        rMissile.setId(missile.getId());
-        rMissile.setLauncher(missileLauncherEntityToMissileLauncherObject(missile.getMissileLauncherEntity()));
-
-        return rMissile;
+    public MissileDestructor toMissileDestructorObject(IMissileDestructorDao missileDestructor) {
+        return null;
     }
 
     @Override
-    public MissileDestructor missileDestructorEntityToMissileDestructorObject(IMissileDestructorEntity missileDestructor) {
-        if(missileDestructor == null)
-            return null;
-
-        MissileDestructor rMissileDestructor = new MissileDestructor();
-        rMissileDestructor.setId(missileDestructor.getId());
-        rMissileDestructor.setTargets(new LinkedList<>());
-        for(IMissileEntity m : missileDestructor.getMissiles())
-            rMissileDestructor.getTargets().add(missileEntityToMissileObject(m));
-
-        return rMissileDestructor;
+    public MissileLauncher toMissileLauncherObject(IMissileLauncherDao missileLauncher) {
+        return null;
     }
 
     @Override
-    public MissileLauncher missileLauncherEntityToMissileLauncherObject(IMissileLauncherEntity missileLauncher) {
-        if(missileLauncher == null)
-            return null;
-
-        MissileLauncher rMissileLauncher = new MissileLauncher();
-
-        rMissileLauncher.setId(missileLauncher.getId());
-        rMissileLauncher.setDestructed(missileLauncher.isDestructed());
-        rMissileLauncher.setMissilesToLaunch(new LinkedList<>());
-
-        return rMissileLauncher;
+    public HiddenMissileLauncher toHiddenMissileLauncherObject(IHiddenMissileLauncherDao hiddenMissileLauncher) {
+        return null;
     }
 
     @Override
-    public HiddenMissileLauncher hiddenMissileLauncherEntityToMissileLauncherObject(IMissileLauncherEntity hiddenMissileLauncher) {
-        if(hiddenMissileLauncher == null)
-            return null;
-
-        HiddenMissileLauncher rHiddenMissileLauncher = new HiddenMissileLauncher();
-
-        rHiddenMissileLauncher.setHiddenNow(hiddenMissileLauncher.isHidden());
-        rHiddenMissileLauncher.setDestructed(hiddenMissileLauncher.isDestructed());
-        rHiddenMissileLauncher.setId(hiddenMissileLauncher.getId());
-        rHiddenMissileLauncher.setMissilesToLaunch(new LinkedList<>());
-
-        return rHiddenMissileLauncher;
+    public LauncherDestructor toLauncherDestructorObject(ILauncherDestructorDao launcherDestructor) {
+        return null;
     }
 
     @Override
-    public LauncherDestructor launcherDestructorEntityToLauncherDestructorObject(ILauncherDestructorEntity launcherDestructor) {
-        if(launcherDestructor == null)
-            return null;
-
-        LauncherDestructor rLauncherDestructor = new LauncherDestructor();
-
-        rLauncherDestructor.setId(launcherDestructor.getId());
-        rLauncherDestructor.setType(launcherDestructor.getType().ordinal() == 0 ? IConstants.LauncherDestructorType.PLANE : IConstants.LauncherDestructorType.SHIP);
-        rLauncherDestructor.setTargets(new LinkedList<>());
-
-        return rLauncherDestructor;
-    }
-
-    @Override
-    public WarModel warModelEntityToWarModelObject(IWarModelEntity warModel) {
-        if(warModel == null)
-            return null;
-
-        WarModel rWarModel = WarModel.getInstance();
-
-        rWarModel.setDestructedLaunchers(warModel.getDestructedLaunchers());
-        rWarModel.setDestructedMissiles(warModel.getDestructedMissiles());
-        rWarModel.setHits(warModel.getHits());
-        rWarModel.setTotalDamage(warModel.getTotalDamage());
-
-        return rWarModel;
+    public WarModel toWarModelObject(IWarModelDao warModel) {
+        return null;
     }
 }

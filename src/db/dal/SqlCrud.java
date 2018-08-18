@@ -1,21 +1,16 @@
 package db.dal;
 
-import bl.LauncherDestructor;
+import bl.HiddenMissileLauncher;
 import db.dal.commons.CrudConstants;
-import db.dal.commons.NotImplemented;
 import db.dal.entities.*;
 import db.dal.entities.sql.*;
-import db.dal.entities.sqlpk.LauncherDestructorPK;
-import db.dal.entities.sqlpk.MissileDestructorPK;
-import db.dal.entities.sqlpk.MissileLauncherPK;
-import db.dal.entities.sqlpk.MissilePK;
 import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
@@ -42,11 +37,12 @@ public class SqlCrud implements ICrud {
                 properties.setProperty(CrudConstants.HIBERNATE_AUTOCOMMIT_PROPERTY_NAME, hibernateAutoCommitVal);
 
                 Configuration conf = new Configuration();
-                conf.addAnnotatedClass(MissileSqlEntity.class);
-                conf.addAnnotatedClass(MissileLauncherSqlEntity.class);
-                conf.addAnnotatedClass(MissileDestructorSqlEntity.class);
-                conf.addAnnotatedClass(LauncherDestructorSqlEntity.class);
-                conf.addAnnotatedClass(WarModelSqlEntity.class);
+                conf.addAnnotatedClass(MissileSqlDao.class);
+                conf.addAnnotatedClass(MissileLauncherSqlDao.class);
+                conf.addAnnotatedClass(MissileDestructorSqlDao.class);
+                conf.addAnnotatedClass(LauncherDestructorSqlDao.class);
+                conf.addAnnotatedClass(WarModelSqlDao.class);
+                conf.addAnnotatedClass(HiddenMissileLauncherSqlDao.class);
                 conf.setProperties(properties);
 
                 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(conf.getProperties()).build();
@@ -61,40 +57,29 @@ public class SqlCrud implements ICrud {
     /***********************
      ** CREATE OPERATIONS **
      ***********************/
-    @Override
-    public long createWarModel(IWarModelEntity warModelEntity) {
+    public int create(WarDao daoObj) {
         Session session = factory.openSession();
         Transaction tx = null;
-        long id = 0;
+        int id = -1;
         try {
             tx = session.beginTransaction();
-            WarModelSqlEntity warModel = (WarModelSqlEntity)warModelEntity;
-            id = (long)session.save(warModel);
-            tx.commit();
-
-        } catch(Exception ex) {
-            if (tx != null)
-                tx.rollback();
-            logger.error(ex.getMessage());
-        } finally {
-            session.close();
-            return id;
-        }
-    }
-
-    @Override
-    public String createMissile(IMissileEntity missile) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        String id = null;
-        try {
-            tx = session.beginTransaction();
-            MissileSqlEntity localMissile = (MissileSqlEntity)missile;
-            id = (String)session.save(localMissile);
+            if(daoObj instanceof IWarModelDao) {
+                id = (int)session.save((WarModelSqlDao)daoObj);
+            } else if(daoObj instanceof IMissileDao) {
+                id = (int)session.save((MissileSqlDao)daoObj);
+            } else if(daoObj instanceof IMissileLauncherDao) {
+                id = (int)session.save((MissileLauncherSqlDao)daoObj);
+            } else if(daoObj instanceof IHiddenMissileLauncherDao) {
+                id = (int)session.save((HiddenMissileLauncherSqlDao)daoObj);
+            } else if(daoObj instanceof IMissileDestructorDao) {
+                id = (int)session.save((MissileDestructorSqlDao)daoObj);
+            } else if(daoObj instanceof ILauncherDestructorDao){
+                id = (int)session.save((LauncherDestructorSqlDao)daoObj);
+            }
             tx.commit();
         } catch(Exception ex) {
-            if (tx != null)
-                tx.rollback();
+            if(tx != null)
+                tx.rollback();;
             logger.error(ex);
         } finally {
             session.close();
@@ -103,641 +88,226 @@ public class SqlCrud implements ICrud {
     }
 
     @Override
-    public String createMissileLauncher(IMissileLauncherEntity missileLauncher) {
-       Session session = factory.openSession();
-       Transaction tx = null;
-       String id = null;
-       try {
-           tx = session.beginTransaction();
-           MissileLauncherSqlEntity missileLauncherSqlEntity = (MissileLauncherSqlEntity)missileLauncher;
-           id = (String)session.save(missileLauncherSqlEntity);
-           tx.commit();
-       } catch (Exception ex) {
-           if (tx != null)
-               tx.rollback();
-           logger.error(ex);
-       } finally {
-           session.close();
-           return id;
-       }
+    public int createWarModel(IWarModelDao warModelEntity) {
+        return create(warModelEntity);
     }
 
     @Override
-    public String createMissileDestructor(IMissileDestructorEntity missileDestructorEntity) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        String id = null;
-        try {
-            tx = session.beginTransaction();
-            MissileDestructorSqlEntity missileDestructorSqlEntity = (MissileDestructorSqlEntity)missileDestructorEntity;
-            id = (String)session.save(missileDestructorSqlEntity);
-            tx.commit();
-        } catch (Exception ex) {
-            if (tx != null)
-                tx.rollback();
-            logger.error(ex);
-        } finally {
-            session.close();
-            return id;
-        }
+    public int createMissile(IMissileDao missile) {
+        return create(missile);
     }
 
     @Override
-    public String createLauncherDestructor(ILauncherDestructorEntity launcherDestructorEntity) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        String id = null;
-        try {
-            tx = session.beginTransaction();
-            LauncherDestructor launcherDestructor = (LauncherDestructor)launcherDestructorEntity;
-            id = (String)session.save(launcherDestructor);
-            tx.commit();
-        } catch (Exception ex) {
-            if (tx != null)
-                tx.rollback();
-            logger.error(ex);
-        } finally {
-            session.close();
-            return id;
-        }
+    public int createMissileLauncher(IMissileLauncherDao missileLauncher) {
+        return create(missileLauncher);
+    }
+
+    @Override
+    public int createHiddenMissileLauncher(IHiddenMissileLauncherDao hiddenMissileLauncher) {
+        return create(hiddenMissileLauncher);
+    }
+
+    @Override
+    public int createMissileDestructor(IMissileDestructorDao missileDestructorEntity) {
+        return create(missileDestructorEntity);
+    }
+
+    @Override
+    public int createLauncherDestructor(ILauncherDestructorDao launcherDestructorEntity) {
+        return create(launcherDestructorEntity);
     }
 
     /***********************
      ** READ OPERATIONS **
      ***********************/
     @Override
-    public IWarModelEntity readWarModelById(long id) {
+    public IWarModelDao readWarModelById(long wid) {
         Session session = factory.openSession();
         Transaction tx = null;
-        WarModelSqlEntity warModelSqlEntity = null;
+        WarModelSqlDao warModelSqlDao = null;
         try {
-            tx = session.beginTransaction();
-            warModelSqlEntity = session.get(WarModelSqlEntity.class, id);
+            warModelSqlDao = session.createQuery(
+                    "SELECT w " +
+                            "FROM war_model w " +
+                            "WHERE w.war_model_id LIKE :aId", WarModelSqlDao.class).setParameter("aId", wid).getSingleResult();
             tx.commit();
         } catch (Exception ex) {
-            if (tx != null)
+            if(tx != null)
                 tx.rollback();
             logger.error(ex);
         } finally {
             session.close();
-            return warModelSqlEntity;
+            return warModelSqlDao;
         }
     }
 
     @Override
-    @NotImplemented
-    public List<IWarModelEntity> readWarModelByHits(int hits) {
-        /* NOT IMPLEMENTED */
+    public List<IMissileDao> readMissileById(String id) {
         return null;
     }
 
     @Override
-    @NotImplemented
-    public List<IWarModelEntity> readWarModelByTotalDamage(int totalDamage) {
-        /* NOT IMPLEMENTED */
-        return null;
-    }
-
-    @Override
-    @NotImplemented
-    public List<IWarModelEntity> readWarModelByLaunchedMissiles(int launchedMissiles) {
-        /* NOT IMPLEMENTED */
-        return null;
-    }
-
-    @Override
-    @NotImplemented
-    public List<IWarModelEntity> readWarModelDestructedMissiles(int destructedMissiles) {
-       /* NOT IMPLEMENTED */
-        return null;
-    }
-
-    @Override
-    @NotImplemented
-    public List<IWarModelEntity> readWarModelDestructedLaunchers(int destructedLaunchers) {
-        /* NOT IMPLEMENTED */
-        return null;
-    }
-
-    @Override
-    public IMissileEntity readMissileById(String id, long warModelId) {
+    public List<IMissileDao> readMissileByWarModel(long wid) {
         Session session = factory.openSession();
         Transaction tx = null;
-        IMissileEntity missileEntity = null;
+        List<MissileSqlDao> missileSqlDaoList = null;
+        List<IMissileDao> missileDaoList = null;
         try {
-            tx = session.beginTransaction();
-            missileEntity = session.get(MissileSqlEntity.class, new MissilePK(id, warModelId));
-            tx.commit();
-        } catch (Exception ex) {
-            if (tx != null)
-                tx.rollback();
-            logger.error(ex);
-        } finally {
-            session.close();
-            return missileEntity;
-        }
-    }
-
-    @Override
-    public List<IMissileEntity> readMissileByWarModel(IWarModelEntity warModelEntity){
-        Session session = factory.openSession();
-        Transaction tx = null;
-        List<MissileSqlEntity> missileEntities = null;
-        List<IMissileEntity> rMissileEntities = null;
-        try {
-            tx = session.beginTransaction();
-            missileEntities = session.createQuery(
-                    "SELECT missile " +
-                            "FROM MissileSqlEntity missile " +
-                            "WHERE missile.warModelId LIKE :aWarModelId", MissileSqlEntity.class)
-                    .setParameter("aWarModelId", warModelEntity.getTimeStamp())
-                    .list();
-
-            // Convert to return type
-            if(missileEntities != null) {
-                rMissileEntities = new ArrayList<>();
-                rMissileEntities.addAll(missileEntities);
-            }
-            tx.commit();
-        } catch (Exception ex) {
-            if (tx != null)
-                tx.rollback();
-            logger.error(ex);
-        } finally {
-            session.close();
-            return rMissileEntities;
-        }
-    }
-
-    @Override
-    @NotImplemented
-    public List<IMissileEntity> readMissileByDestination(String destination) {
-        /* NOT IMPLEMENTED */
-        return null;
-    }
-
-    @Override
-    @NotImplemented
-    public List<IMissileEntity> readMissileByFlyTime(int flyTime) {
-        /* NOT IMPLEMENTED */
-        return null;
-    }
-
-    @Override
-    @NotImplemented
-    public List<IMissileEntity> readMissileByDamage(int damage) {
-        /* NOT IMPLEMENTED */
-        return null;
-    }
-
-    @Override
-    @NotImplemented
-    public List<IMissileEntity> readMissileByPotentialDamage(int potentialDamage) {
-        /* NOT IMPLEMENTED */
-        return null;
-    }
-
-    @Override
-    @NotImplemented
-    public List<IMissileEntity> readMissileByIsDone(boolean isDone) {
-        /* NOT IMPLEMENTED */
-        return null;
-    }
-
-    @Override
-    @NotImplemented
-    public List<IMissileEntity> readMissileByIsDestructed(boolean isDestructed) {
-        /* NOT IMPLEMENTED */
-        return null;
-    }
-
-    @Override
-    public List<IMissileEntity> readMissileByLauncher(IMissileLauncherEntity missileLauncherEntity) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        List<IMissileEntity> missileEntities = null;
-        List<MissileSqlEntity> missileSqlEntities = null;
-        try {
-            tx = session.beginTransaction();
-            missileSqlEntities = session.createQuery(
-                    "SELECT ml.missiles " +
-                            "FROM MissileLauncherSqlEntity AS ml ", MissileSqlEntity.class).list();
-            tx.commit();
-
-            // Convert to return type
-            if(missileSqlEntities != null) {
-                missileEntities = new ArrayList<>();
-                missileEntities.addAll(missileSqlEntities);
-            }
-        } catch (Exception ex) {
-            if (tx != null)
-                tx.rollback();
-            logger.error(ex);
-        } finally {
-            session.close();
-            return missileEntities;
-        }
-    }
-
-    @Override
-    public IMissileLauncherEntity readMissileLauncherById(String id, long warModelId) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        IMissileLauncherEntity missileLauncherEntity = null;
-        try {
-            tx = session.beginTransaction();
-            missileLauncherEntity = session.get(MissileLauncherSqlEntity.class, new MissileLauncherPK(id, warModelId));
-            tx.commit();
-        } catch (Exception ex) {
-            if (tx != null)
-                tx.rollback();
-            logger.error(ex);
-        } finally {
-            session.close();
-            return missileLauncherEntity;
-        }
-    }
-
-    @Override
-    public List<IMissileLauncherEntity> readMissileLauncherByWarModel(IWarModelEntity warModelEntity) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        List<IMissileLauncherEntity> missileLauncherEntities = null;
-        List<MissileLauncherSqlEntity> missileLauncherSqlEntities = null;
-        try {
-            tx = session.beginTransaction();
-            missileLauncherSqlEntities = session.createQuery(
-                    "SELECT ml " +
-                        "FROM MissileLauncherSqlEntity ml " +
-                        "WHERE ml.warModelId LIKE :aWarModelId", MissileLauncherSqlEntity.class)
-                    .setParameter("aWarModelId", warModelEntity.getTimeStamp())
+            missileSqlDaoList = session.createQuery(
+                    "SELECT m " +
+                            "FROM missile m " +
+                            "WHERE m.war_model_id LIKE :aId", MissileSqlDao.class)
+                    .setParameter("aId", wid)
                     .list();
             tx.commit();
 
-            // Convert to return type
-            if(missileLauncherSqlEntities != null) {
-                missileLauncherEntities = new ArrayList<>();
-                missileLauncherEntities.addAll(missileLauncherSqlEntities);
-            }
+            if(missileSqlDaoList == null)
+                return null;
+
+            missileDaoList = new LinkedList<>(missileSqlDaoList);
         } catch (Exception ex) {
-            if (tx != null)
+            if(tx != null)
                 tx.rollback();
             logger.error(ex);
         } finally {
             session.close();
-            return missileLauncherEntities;
+            return missileDaoList;
         }
     }
 
     @Override
-    public IMissileLauncherEntity readMissileLauncherByMissile(IMissileEntity missileEntity) {
+    public List<IMissileLauncherDao> readMissileLauncherById(String id) {
+        return null;
+    }
+
+    @Override
+    public List<IMissileLauncherDao> readMissileLauncherByWarModel(long wid) {
         Session session = factory.openSession();
         Transaction tx = null;
-        IMissileLauncherEntity rMissileLauncher = null;
+        List<MissileLauncherSqlDao> missileLauncherSqlDaoList = null;
+        List<IMissileLauncherDao> missileLauncherDaoList = null;
         try {
-            tx = session.beginTransaction();
-            rMissileLauncher = session.createQuery(
+            missileLauncherSqlDaoList = session.createQuery(
                     "SELECT ml " +
-                            "FROM MissileLauncherSqlEntity ml JOIN  ml.missiles m " +
-                            "WHERE m.id LIKE :mId AND m.warModelId LIKE :mWMId", MissileLauncherSqlEntity.class)
-                    .setParameter("mId", missileEntity.getId())
-                    .setParameter("mWMId", missileEntity.getWarModelId())
-                    .getSingleResult();
+                            "FROM missile_launcher ml " +
+                            "WHERE ml.war_model_id LIKE :aId", MissileLauncherSqlDao.class)
+                    .setParameter("aId", wid)
+                    .list();
             tx.commit();
+
+            if(missileLauncherSqlDaoList == null)
+                return null;
+
+            missileLauncherDaoList = new LinkedList<>(missileLauncherSqlDaoList);
         } catch (Exception ex) {
-            if (tx != null)
+            if(tx != null)
                 tx.rollback();
             logger.error(ex);
         } finally {
             session.close();
-            return rMissileLauncher;
+            return missileLauncherDaoList;
         }
     }
 
     @Override
-    @NotImplemented
-    public List<IMissileLauncherEntity> readMissileLauncherByIsDestructed(boolean isDestructed) {
-        /* NOT IMPLEMENTED */
+    public List<IHiddenMissileLauncherDao> readHiddenMissileLauncherById(String id) {
         return null;
     }
 
     @Override
-    @NotImplemented
-    public List<IMissileLauncherEntity> readMissileLauncherByIsHidden(boolean isHidden) {
-        /* NOT IMPLEMENTED */
-        return null;
-    }
-
-    @Override
-    public IMissileDestructorEntity readMissileDestructorById(String id, long warModelId) {
+    public List<IHiddenMissileLauncherDao> readHiddenMissileLauncherByWarModel(long wid) {
         Session session = factory.openSession();
         Transaction tx = null;
-        IMissileDestructorEntity missileDestructorEntity = null;
+        List<HiddenMissileLauncherSqlDao> hiddenMissileLauncherSqlDaoList = null;
+        List<IHiddenMissileLauncherDao> hiddenMissileLauncherDaoList = null;
         try {
-            tx = session.beginTransaction();
-            missileDestructorEntity = session.get(MissileDestructorSqlEntity.class, new MissileDestructorPK(id, warModelId));
+            hiddenMissileLauncherSqlDaoList = session.createQuery(
+                    "SELECT hml " +
+                            "FROM hidden_missile_launcher hml " +
+                            "WHERE hml.war_model_id LIKE :aId", HiddenMissileLauncherSqlDao.class)
+                    .setParameter("aId", wid)
+                    .list();
             tx.commit();
+
+            if(hiddenMissileLauncherSqlDaoList == null)
+                return null;
+
+            hiddenMissileLauncherDaoList = new LinkedList<>(hiddenMissileLauncherSqlDaoList);
         } catch (Exception ex) {
-            if (tx != null)
+            if(tx != null)
                 tx.rollback();
             logger.error(ex);
         } finally {
             session.close();
-            return missileDestructorEntity;
+            return hiddenMissileLauncherDaoList;
         }
     }
 
     @Override
-    public List<IMissileDestructorEntity> readMissileDestructorByWarModel(IWarModelEntity warModelEntity) {
+    public List<IMissileDestructorDao> readMissileDestructorById(String id) {
+        return null;
+    }
+
+    @Override
+    public List<IMissileDestructorDao> readMissileDestructorByWarModel(long wid) {
         Session session = factory.openSession();
         Transaction tx = null;
-        List<IMissileDestructorEntity> missileDestructorEntities = null;
-        List<MissileDestructorSqlEntity> missileDestructorSqlEntities = null;
+        List<MissileDestructorSqlDao> missileDestructorSqlDaoList = null;
+        List<IMissileDestructorDao> missileDestructorDaoList = null;
         try {
-            tx = session.beginTransaction();
-            missileDestructorSqlEntities = session.createQuery(
+            missileDestructorSqlDaoList = session.createQuery(
                     "SELECT md " +
-                            "FROM MissileDestructorSqlEntity md " +
-                            "WHERE ml.warModelId LIKE :aWarModelId", MissileDestructorSqlEntity.class)
-                    .setParameter("aWarModelId", warModelEntity.getTimeStamp())
+                            "FROM missile_destructor md " +
+                            "WHERE md.war_model_id LIKE :aId", MissileDestructorSqlDao.class)
+                    .setParameter("aId", wid)
                     .list();
             tx.commit();
 
-            if(missileDestructorSqlEntities != null)
-                missileDestructorEntities = new ArrayList<>(missileDestructorSqlEntities);
+            if(missileDestructorSqlDaoList == null)
+                return null;
 
+            missileDestructorDaoList = new LinkedList<>(missileDestructorSqlDaoList);
         } catch (Exception ex) {
-            if (tx != null)
+            if(tx != null)
                 tx.rollback();
             logger.error(ex);
         } finally {
             session.close();
-            return missileDestructorEntities;
+            return missileDestructorDaoList;
         }
     }
 
     @Override
-    @NotImplemented
-    public IMissileDestructorEntity readMissileDestructorByMissile(IMissileEntity missileEntity) {
-        /* NOT IMPLEMENTED */
+    public List<ILauncherDestructorDao> readLauncherDestructorById(String id) {
         return null;
     }
 
     @Override
-    public ILauncherDestructorEntity readLauncherDestructorById(String id, long warModelId) {
+    public List<ILauncherDestructorDao> readLauncherDestructorByWarModel(long wid) {
         Session session = factory.openSession();
         Transaction tx = null;
-        ILauncherDestructorEntity launcherDestructorEntity = null;
+        List<LauncherDestructorSqlDao> launcherDestructorSqlDaoList = null;
+        List<ILauncherDestructorDao> launcherDestructorDaoList = null;
         try {
-            tx = session.beginTransaction();
-            launcherDestructorEntity = session.get(LauncherDestructorSqlEntity.class, new LauncherDestructorPK(id, warModelId));
-            tx.commit();
-        } catch (Exception ex) {
-            if (tx != null)
-                tx.rollback();
-            logger.error(ex);
-        } finally {
-            session.close();
-            return launcherDestructorEntity;
-        }
-    }
-
-    @Override
-    public List<ILauncherDestructorEntity> readLauncherDestructorByWarModel(IWarModelEntity warModelEntity) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        List<ILauncherDestructorEntity> launcherDestructorEntities = null;
-        List<LauncherDestructorSqlEntity> launcherDestructorSqlEntities = null;
-        try {
-            tx = session.beginTransaction();
-            launcherDestructorSqlEntities = session.createQuery("SELECT md " +
-                    "FROM LauncherDestructorSqlEntity ld " +
-                    "WHERE ld.warModelId LIKE :aWarModelId", LauncherDestructorSqlEntity.class)
-                    .setParameter("aWarModelId", warModelEntity.getTimeStamp())
+            launcherDestructorSqlDaoList = session.createQuery(
+                    "SELECT ld " +
+                            "FROM launcher_destructor ld " +
+                            "WHERE ld.war_model_id LIKE :aId", LauncherDestructorSqlDao.class)
+                    .setParameter("aId", wid)
                     .list();
             tx.commit();
 
-            if(launcherDestructorSqlEntities != null)
-                launcherDestructorEntities = new ArrayList<>(launcherDestructorSqlEntities);
+            if(launcherDestructorSqlDaoList == null)
+                return null;
 
+            launcherDestructorDaoList = new LinkedList<>(launcherDestructorSqlDaoList);
         } catch (Exception ex) {
-            if (tx != null)
+            if(tx != null)
                 tx.rollback();
             logger.error(ex);
         } finally {
             session.close();
-            return launcherDestructorEntities;
-        }
-    }
-
-    @Override
-    @NotImplemented
-    public List<ILauncherDestructorEntity> readLauncherDestructorByType(LauncherDestructorTypeEnum type) {
-        /* NOT IMPLEMENTED */
-        return null;
-    }
-
-    @Override
-    @NotImplemented
-    public List<ILauncherDestructorEntity> readLauncherDestructorByMissileLauncher(IMissileLauncherEntity missileLauncherEntity) {
-        /* NOT IMPLEMENTED */
-        return null;
-    }
-
-
-    /***********************
-     ** UPDATE OPERATIONS **
-     ***********************/
-    @Override
-    public boolean updateWarModel(IWarModelEntity warModelEntity) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        boolean flag = true;
-        try {
-            session.update((WarModelSqlEntity)warModelEntity);
-            tx.commit();
-        } catch(Exception ex) {
-            if (tx != null)
-                tx.rollback();
-            flag = false;
-            logger.error(ex);
-        } finally {
-            session.close();
-            return flag;
-        }
-    }
-
-    @Override
-    public boolean updateMissile(IMissileEntity missile) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        boolean flag = true;
-        try {
-            session.saveOrUpdate((MissileSqlEntity)missile);
-            tx.commit();
-        } catch(Exception ex) {
-            if (tx != null)
-                tx.rollback();
-            flag = false;
-            logger.error(ex);
-        } finally {
-            session.close();
-            return flag;
-        }
-    }
-
-    @Override
-    public boolean updateMissileLauncher(IMissileLauncherEntity missileLauncher) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        boolean flag = true;
-        try {
-            session.saveOrUpdate((MissileLauncherSqlEntity)missileLauncher);
-            tx.commit();
-        } catch(Exception ex) {
-            if (tx != null)
-                tx.rollback();
-            flag = false;
-            logger.error(ex);
-        } finally {
-            session.close();
-            return flag;
-        }
-    }
-
-    @Override
-    public boolean updateMissileDestructor(IMissileDestructorEntity missileDestructorEntity) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        boolean flag = true;
-        try {
-            session.saveOrUpdate((MissileDestructorSqlEntity)missileDestructorEntity);
-            tx.commit();
-        } catch(Exception ex) {
-            if (tx != null)
-                tx.rollback();
-            flag = false;
-            logger.error(ex);
-        } finally {
-            session.close();
-            return flag;
-        }
-    }
-
-    @Override
-    public boolean updateLauncherDestructor(ILauncherDestructorEntity launcherDestructorEntity) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        boolean flag = true;
-        try {
-            session.saveOrUpdate((LauncherDestructorSqlEntity)launcherDestructorEntity);
-            tx.commit();
-        } catch(Exception ex) {
-            if (tx != null)
-                tx.rollback();
-            flag = false;
-            logger.error(ex);
-        } finally {
-            session.close();
-            return flag;
-        }
-    }
-
-    /***********************
-     ** DELETE OPERATIONS **
-     ***********************/
-    @Override
-    public boolean deleteWarModel(IWarModelEntity warModelEntity) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        boolean flag = true;
-        try {
-            session.delete((WarModelSqlEntity)warModelEntity);
-            tx.commit();
-        } catch(Exception ex) {
-            if (tx != null)
-                tx.rollback();
-            flag = false;
-            logger.error(ex);
-        } finally {
-            session.close();
-            return flag;
-        }
-    }
-
-    @Override
-    public boolean deleteMissile(IMissileEntity missile) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        boolean flag = true;
-        try {
-            session.delete((MissileSqlEntity)missile);
-            tx.commit();
-        } catch(Exception ex) {
-            if (tx != null)
-                tx.rollback();
-            flag = false;
-            logger.error(ex);
-        } finally {
-            session.close();
-            return flag;
-        }
-    }
-
-    @Override
-    public boolean deleteMissileLauncher(IMissileLauncherEntity missileLauncher) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        boolean flag = true;
-        try {
-            session.delete((MissileLauncherSqlEntity)missileLauncher);
-            tx.commit();
-        } catch(Exception ex) {
-            if (tx != null)
-                tx.rollback();
-            flag = false;
-            logger.error(ex);
-        } finally {
-            session.close();
-            return flag;
-        }
-    }
-
-    @Override
-    public boolean deleteMissileDestructor(IMissileDestructorEntity missileDestructorEntity) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        boolean flag = true;
-        try {
-            session.delete((MissileDestructorSqlEntity)missileDestructorEntity);
-            tx.commit();
-        } catch(Exception ex) {
-            if (tx != null)
-                tx.rollback();
-            flag = false;
-            logger.error(ex);
-        } finally {
-            session.close();
-            return flag;
-        }
-    }
-
-    @Override
-    public boolean deleteLauncherDestructor(ILauncherDestructorEntity launcherDestructorEntity) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        boolean flag = true;
-        try {
-            session.delete((LauncherDestructorSqlEntity)launcherDestructorEntity);
-            tx.commit();
-        } catch(Exception ex) {
-            if (tx != null)
-                tx.rollback();
-            flag = false;
-            logger.error(ex);
-        } finally {
-            session.close();
-            return flag;
+            return launcherDestructorDaoList;
         }
     }
 }

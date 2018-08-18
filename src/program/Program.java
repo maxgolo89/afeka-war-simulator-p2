@@ -1,5 +1,7 @@
 package program;
 
+import ui.App;
+
 import java.util.Scanner;
 
 
@@ -16,6 +18,6 @@ public class Program implements IConstants {
 //		else
 //			new ConsoleView().init();
 //		ICrud sql = new SqlCrud();
-//		javafx.application.Application.launch(App.class);
+		javafx.application.Application.launch(App.class);
 	}
 }

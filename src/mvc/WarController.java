@@ -2,6 +2,7 @@
 
 import java.util.Vector;
 import bl.WarModel;
+import db.app.DbAppController;
 import program.IConstants;
 import program.WarSchduler;
 import program.jsonParser;
@@ -18,6 +19,7 @@ public class WarController implements WarModelEventsListener, WarUIEventsListene
 	public WarController( ) {
 		this.war = WarModel.getInstance();
 		war.registerListener(this);
+		war.registerListener(DbAppController.getInstance());
 	}
 	
 	public void addView( WarUI view ){

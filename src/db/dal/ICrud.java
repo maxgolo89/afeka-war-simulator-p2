@@ -1,7 +1,6 @@
 package db.dal;
 
 import db.dal.entities.*;
-import program.IConstants;
 
 import java.util.List;
 
@@ -11,95 +10,46 @@ public interface ICrud {
      ** CREATE OPERATIONS **
      ***********************/
     /* *** WarModelEntity *** */
-    long createWarModel(IWarModelEntity warModelEntity);
+    int createWarModel(IWarModelDao warModelEntity);
 
     /* *** MissileEntity *** */
-    String createMissile(IMissileEntity missile);
+    int createMissile(IMissileDao missile);
 
     /* *** MissileLauncherEntity *** */
-    String createMissileLauncher(IMissileLauncherEntity missileLauncher);
+    int createMissileLauncher(IMissileLauncherDao missileLauncher);
+
+    /* *** HiddenMissileLauncherEntity *** */
+    int createHiddenMissileLauncher(IHiddenMissileLauncherDao hiddenMissileLauncher);
 
     /* *** MissileDestructorEntity *** */
-    String createMissileDestructor(IMissileDestructorEntity missileDestructorEntity);
+    int createMissileDestructor(IMissileDestructorDao missileDestructorEntity);
 
     /* *** LauncherDestructorEntity *** */
-    String createLauncherDestructor(ILauncherDestructorEntity launcherDestructorEntity);
+    int createLauncherDestructor(ILauncherDestructorDao launcherDestructorEntity);
 
     /***********************
      ** READ OPERATIONS **
      ***********************/
     /* *** WarModelEntity *** */
-    IWarModelEntity readWarModelById(long id);
-    List<IWarModelEntity> readWarModelByHits(int hits);
-    List<IWarModelEntity> readWarModelByTotalDamage(int totalDamage);
-    List<IWarModelEntity> readWarModelByLaunchedMissiles(int launchedMissiles);
-    List<IWarModelEntity> readWarModelDestructedMissiles(int destructedMissiles);
-    List<IWarModelEntity> readWarModelDestructedLaunchers(int destructedLaunchers);
+    IWarModelDao readWarModelById(long wid);
 
     /* *** MissileEntity *** */
-    IMissileEntity readMissileById(String id, long warModelId);
-    List<IMissileEntity> readMissileByWarModel(IWarModelEntity warModelEntity);
-    List<IMissileEntity> readMissileByDestination(String destination);
-    List<IMissileEntity> readMissileByFlyTime(int flyTime);
-    List<IMissileEntity> readMissileByDamage(int damage);
-    List<IMissileEntity> readMissileByPotentialDamage(int potentialDamage);
-    List<IMissileEntity> readMissileByIsDone(boolean isDone);
-    List<IMissileEntity> readMissileByIsDestructed(boolean isDestructed);
-    List<IMissileEntity> readMissileByLauncher(IMissileLauncherEntity missileLauncherEntity);
-
+    List<IMissileDao> readMissileById(String id);
+    List<IMissileDao> readMissileByWarModel(long wid);
 
     /* *** MissileLauncherEntity *** */
-    IMissileLauncherEntity readMissileLauncherById(String id, long warModelId);
-    List<IMissileLauncherEntity> readMissileLauncherByWarModel(IWarModelEntity warModelEntity);
-    IMissileLauncherEntity readMissileLauncherByMissile(IMissileEntity missileEntity);
-    List<IMissileLauncherEntity> readMissileLauncherByIsDestructed(boolean isDestructed);
-    List<IMissileLauncherEntity> readMissileLauncherByIsHidden(boolean isHidden);
+    List<IMissileLauncherDao> readMissileLauncherById(String id);
+    List<IMissileLauncherDao> readMissileLauncherByWarModel(long wid);
+
+    /* *** HiddenMissileLauncherEntity *** */
+    List<IHiddenMissileLauncherDao> readHiddenMissileLauncherById(String id);
+    List<IHiddenMissileLauncherDao> readHiddenMissileLauncherByWarModel(long wid);
 
     /* *** MissileDestructorEntity *** */
-    IMissileDestructorEntity readMissileDestructorById(String id, long warModelId);
-    List<IMissileDestructorEntity> readMissileDestructorByWarModel(IWarModelEntity warModelEntity);
-    IMissileDestructorEntity readMissileDestructorByMissile(IMissileEntity missileEntity);
-
+    List<IMissileDestructorDao> readMissileDestructorById(String id);
+    List<IMissileDestructorDao> readMissileDestructorByWarModel(long wid);
 
     /* *** LauncherDestructorEntity *** */
-    ILauncherDestructorEntity readLauncherDestructorById(String id, long warModelId);
-    List<ILauncherDestructorEntity> readLauncherDestructorByWarModel(IWarModelEntity warModelEntity);
-    List<ILauncherDestructorEntity> readLauncherDestructorByType(LauncherDestructorTypeEnum type);
-    List<ILauncherDestructorEntity> readLauncherDestructorByMissileLauncher(IMissileLauncherEntity missileLauncherEntity);
-
-    /***********************
-     ** UPDATE OPERATIONS **
-     ***********************/
-    /* *** WarModelEntity *** */
-    boolean updateWarModel(IWarModelEntity warModelSqlEntity);
-
-    /* *** MissileEntity *** */
-    boolean updateMissile(IMissileEntity missile);
-
-    /* *** MissileLauncherEntity *** */
-    boolean updateMissileLauncher(IMissileLauncherEntity missileLauncher);
-
-    /* *** MissileDestructorEntity *** */
-    boolean updateMissileDestructor(IMissileDestructorEntity missileDestructorSqlEntity);
-
-    /* *** LauncherDestructorEntity *** */
-    boolean updateLauncherDestructor(ILauncherDestructorEntity launcherDestructorSqlEntity);
-
-    /***********************
-     ** DELETE OPERATIONS **
-     ***********************/
-    /* *** WarModelEntity *** */
-    boolean deleteWarModel(IWarModelEntity warModelSqlEntity);
-
-    /* *** MissileEntity *** */
-    boolean deleteMissile(IMissileEntity missile);
-
-    /* *** MissileLauncherEntity *** */
-    boolean deleteMissileLauncher(IMissileLauncherEntity missileLauncher);
-
-    /* *** MissileDestructorEntity *** */
-    boolean deleteMissileDestructor(IMissileDestructorEntity missileDestructorSqlEntity);
-
-    /* *** LauncherDestructorEntity *** */
-    boolean deleteLauncherDestructor(ILauncherDestructorEntity launcherDestructorSqlEntity);
+    List<ILauncherDestructorDao> readLauncherDestructorById(String id);
+    List<ILauncherDestructorDao> readLauncherDestructorByWarModel(long wid);
 }

@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Vector;
 
+import bl.WarModel;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -245,8 +246,9 @@ public class War implements WarUI {
 	public void showStatistics(int totalDamage, int launchedMissiles, int hits, int destructedMissiles, int destructedLaunchers, boolean exit) {
 		Platform.runLater(new Runnable(){
 			public void run() {
-				String s = ENTER + TOTAL_DAMAGE + totalDamage + ENTER + LAUNCHED_MISSILES + launchedMissiles + ENTER + HITS + hits + ENTER + 
+				String s = ENTER + TOTAL_DAMAGE + totalDamage + ENTER + LAUNCHED_MISSILES + launchedMissiles + ENTER + HITS + hits + ENTER +
 						DESTRUCTED_MISSILES + destructedMissiles + ENTER + DESTRUCTED_LAUNCHERS + destructedLaunchers;
+
 
 				Alert dialog = new Alert(AlertType.INFORMATION);
 				dialog.setTitle(STATISTICS);

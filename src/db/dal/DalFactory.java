@@ -15,7 +15,7 @@ public class DalFactory {
 
     private DalFactory() {}
 
-    public DalFactory getInstance() {
+    public static DalFactory getInstance() {
         if(factory == null)
             factory = new DalFactory();
 
