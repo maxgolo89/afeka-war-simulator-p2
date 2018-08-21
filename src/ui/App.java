@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import mvc.WarController;
+import ws.testWS;
 
 public class App extends Application {
 
@@ -18,6 +19,11 @@ public class App extends Application {
 
 	@Override
 	public void start(final Stage stage) throws Exception {
+
+        testWS ws = new testWS();                                           // Start webservice
+        ws.startWS();
+
+
 		try {
 			// get layout from fxml-file
 			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(UIConstants.MAIN_PANE_FXML_PATH));
