@@ -7,5 +7,5 @@ public class CrudConstants {
     public static final String HIBERNATE_USERNAME_PROPERTY_NAME             = "hibernate.connection.username";
     public static final String HIBERNATE_PASSWORD_PROPERTY_NAME             = "hibernate.connection.password";
     public static final String HIBERNATE_CREATEIFNOTEXITST_PROPERTY_NAME    = "hibernate.hbm2ddl.auto";
-    public static final String HIBERNATE_AUTOCOMMIT_PROPERTY_NAME           = " hibernate.connection.autocommit";
+    public static final String HIBERNATE_AUTOCOMMIT_PROPERTY_NAME           = "hibernate.connection.autocommit";
 }

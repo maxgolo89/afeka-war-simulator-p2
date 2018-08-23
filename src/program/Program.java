@@ -18,7 +18,6 @@ public class Program implements IConstants {
 //			javafx.application.Application.launch(App.class);
 //		else
 //			new ConsoleView().init();
-//		ICrud sql = new SqlCrud();
 		javafx.application.Application.launch(App.class);
 	}
 }

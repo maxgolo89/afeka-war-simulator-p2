@@ -1,6 +1,5 @@
 package db.dal.entities.sql;
 
-import bl.Missile;
 import db.dal.entities.*;
 import javax.persistence.*;
 import java.io.Serializable;

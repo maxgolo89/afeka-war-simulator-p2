@@ -57,8 +57,8 @@ public class LauncherDestructor extends WarObject {
 			if (!l.isDestructed()) {
 				l.destructLauncher();
 
-				if (l.isDestructed())
-					success = true;
+			if (l.isDestructed())
+				success = true;
 			}
 			updateResults(l.getID(), success);
 

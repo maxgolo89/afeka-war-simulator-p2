@@ -19,7 +19,7 @@ public class WarController implements WarModelEventsListener, WarUIEventsListene
 	public WarController( ) {
 		this.war = WarModel.getInstance();
 		war.registerListener(this);
-		war.registerListener(DbAppController.getInstance());
+		DbAppController.getInstance(); // Initiate the DbAppController
 	}
 	
 	public void addView( WarUI view ){

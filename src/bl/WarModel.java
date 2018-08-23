@@ -9,6 +9,7 @@ import program.IConstants;
 public class WarModel implements IWar, BLConstants, IConstants {
 
 	protected static WarModel 				war;
+	private boolean 						exitFlag = false;
 
 	private LocalTime 						startTime;
 	private WarTime							warTime;
@@ -164,8 +165,9 @@ public class WarModel implements IWar, BLConstants, IConstants {
 		if ( isDestructed ){
 			destructedLaunchers++;
 			MissileLauncher l = getLauncherById(launcherID);
-			if ( l != null )
-				allLaunchers.remove(l);
+//			if ( l != null )
+//				allLaunchers.remove(l);
+			l.setDestructed(isDestructed);
 			fireEndDestructLauncherEvent(destructorID, launcherID, isDestructed);
 		}
 		
@@ -180,12 +182,15 @@ public class WarModel implements IWar, BLConstants, IConstants {
 		fireStatisticsEvent(totalDamage, launchedMissiles, hits, destructedMissiles, destructedLaunchers, exit);
 	}
 
-	public void exit() {
-		System.out.println("Exiting");
-		endWar();
-		warTime.killTimer();
-		//this
-		fireExitEvent();
+	public synchronized void exit() {
+		if(!exitFlag) {
+			exitFlag = true;
+			System.out.println("Exiting");
+			endWar();
+			warTime.killTimer();
+			//this
+			fireExitEvent();
+		}
 	}
 
 
