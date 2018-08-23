@@ -1,21 +1,23 @@
-package db.dal.entities.sql;
+package db.dal.entities.impl;
 
 import db.dal.entities.IMissileDao;
 import db.dal.entities.IMissileLauncherDao;
 import db.dal.entities.IWarModelDao;
+import org.hibernate.ogm.datastore.document.options.AssociationStorage;
+import org.hibernate.ogm.datastore.document.options.AssociationStorageType;
+import org.hibernate.ogm.datastore.mongodb.options.AssociationDocumentStorage;
+import org.hibernate.ogm.datastore.mongodb.options.AssociationDocumentStorageType;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-/** *************************************************************************************
- *      MISSILE LAUNCHER ENTITY
- *      This class represents MissileLauncher object in SQL db.
- *  ************************************************************************************* */
-
 @Entity
 @Table(name="missile_launcher")
-public class MissileLauncherSqlDao implements IMissileLauncherDao, Serializable {
+@AssociationStorage(AssociationStorageType.IN_ENTITY)
+@AssociationDocumentStorage(AssociationDocumentStorageType.GLOBAL_COLLECTION)
+public class MissileLauncherDao implements IMissileLauncherDao, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -25,21 +27,11 @@ public class MissileLauncherSqlDao implements IMissileLauncherDao, Serializable 
     @Column(name="is_destructed")
     private boolean isDestructed;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name="war_model_id")
-    private WarModelSqlDao warModel;
-    @OneToMany(mappedBy = "missileLauncher", cascade = CascadeType.ALL)
-    private List<MissileSqlDao> missileList;
-
-    @Override
-    public int getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(int id) {
-        this.id = id;
-    }
+    private WarModelDao warModel;
+    @OneToMany(mappedBy = "missileLauncher", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<MissileDao> missileList;
 
     @Override
     public String getmLId() {
@@ -57,8 +49,8 @@ public class MissileLauncherSqlDao implements IMissileLauncherDao, Serializable 
     }
 
     @Override
-    public void setDestructed(boolean destructed) {
-        isDestructed = destructed;
+    public void setDestructed(boolean isDestructed) {
+        this.isDestructed = isDestructed;
     }
 
     @Override
@@ -68,7 +60,7 @@ public class MissileLauncherSqlDao implements IMissileLauncherDao, Serializable 
 
     @Override
     public void setWarModel(IWarModelDao warModel) {
-        this.warModel = (WarModelSqlDao) warModel;
+        this.warModel = (WarModelDao) warModel;
     }
 
     @Override
@@ -80,7 +72,17 @@ public class MissileLauncherSqlDao implements IMissileLauncherDao, Serializable 
     public void setMissileList(List<IMissileDao> missileList) {
         this.missileList = new LinkedList<>();
         for(IMissileDao m : missileList)
-            this.missileList.add((MissileSqlDao)m);
+            this.missileList.add((MissileDao)m);
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
@@ -92,10 +94,10 @@ public class MissileLauncherSqlDao implements IMissileLauncherDao, Serializable 
     public boolean equals(Object obj) {
         if(obj == null)
             return false;
-        if(!(obj instanceof MissileLauncherSqlDao))
+        if(!(obj instanceof MissileLauncherDao))
             return false;
 
-        MissileLauncherSqlDao m = (MissileLauncherSqlDao)obj;
+        MissileLauncherDao m = (MissileLauncherDao)obj;
         if(this.getWarModel().getwMId() == m.getWarModel().getwMId() && this.getmLId().equals(m.getmLId()))
             return true;
 

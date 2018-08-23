@@ -2,7 +2,7 @@ package db.dal.crud;
 
 import db.dal.commons.NotImplemented;
 import db.dal.entities.*;
-import db.dal.entities.mongo.*;
+import db.dal.entities.impl.*;
 import org.apache.log4j.Logger;
 import org.hibernate.Transaction;
 import org.hibernate.boot.MetadataSources;
@@ -41,12 +41,12 @@ public class MongoCrud implements ICrud {
                         .build();
 
                 factory = new MetadataSources(serviceRegistry)
-                        .addAnnotatedClass(WarModelMongoDao.class)
-                        .addAnnotatedClass(MissileMongoDao.class)
-                        .addAnnotatedClass(MissileLauncherMongoDao.class)
-                        .addAnnotatedClass(MissileDestructorMongoDao.class)
-                        .addAnnotatedClass(LauncherDestructorMongoDao.class)
-                        .addAnnotatedClass(HiddenMissileLauncherMongoDao.class)
+                        .addAnnotatedClass(WarModelDao.class)
+                        .addAnnotatedClass(MissileDao.class)
+                        .addAnnotatedClass(MissileLauncherDao.class)
+                        .addAnnotatedClass(MissileDestructorDao.class)
+                        .addAnnotatedClass(LauncherDestructorDao.class)
+                        .addAnnotatedClass(HiddenMissileLauncherDao.class)
                         .buildMetadata()
                         .getSessionFactoryBuilder()
                         .unwrap(OgmSessionFactoryBuilder.class)
@@ -70,7 +70,7 @@ public class MongoCrud implements ICrud {
         int id = -1;
         try {
             tx = session.beginTransaction();
-            session.save((WarModelMongoDao) warModelEntity);
+            session.save((WarModelDao) warModelEntity);
             tx.commit();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -88,7 +88,7 @@ public class MongoCrud implements ICrud {
         int id = -1;
         try {
             tx = session.beginTransaction();
-            id = (int)session.save((MissileMongoDao) missile);
+            id = (int)session.save((MissileDao) missile);
             tx.commit();
         } catch (Exception ex) {
             logger.error(ex);
@@ -105,7 +105,7 @@ public class MongoCrud implements ICrud {
         int id = -1;
         try {
             tx = session.beginTransaction();
-            id = (int)session.save((MissileLauncherMongoDao) missileLauncher);
+            id = (int)session.save((MissileLauncherDao) missileLauncher);
             tx.commit();
         } catch (Exception ex) {
             logger.error(ex);
@@ -122,7 +122,7 @@ public class MongoCrud implements ICrud {
         int id = -1;
         try {
             tx = session.beginTransaction();
-            id = (int)session.save((HiddenMissileLauncherMongoDao) hiddenMissileLauncher);
+            id = (int)session.save((HiddenMissileLauncherDao) hiddenMissileLauncher);
             tx.commit();
         } catch (Exception ex) {
             logger.error(ex);
@@ -139,7 +139,7 @@ public class MongoCrud implements ICrud {
         int id = -1;
         try {
             tx = session.beginTransaction();
-            id = (int)session.save((MissileDestructorMongoDao) missileDestructorEntity);
+            id = (int)session.save((MissileDestructorDao) missileDestructorEntity);
             tx.commit();
         } catch (Exception ex) {
             logger.error(ex);
@@ -156,7 +156,7 @@ public class MongoCrud implements ICrud {
         int id = -1;
         try {
             tx = session.beginTransaction();
-            id = (int)session.save((LauncherDestructorMongoDao) launcherDestructorEntity);
+            id = (int)session.save((LauncherDestructorDao) launcherDestructorEntity);
             tx.commit();
         } catch (Exception ex) {
             logger.error(ex);
@@ -178,7 +178,7 @@ public class MongoCrud implements ICrud {
             tx = session.beginTransaction();
             String queryString = String.format("db.war_model.find({'war_model_id': %d})", wid);
             warModel = (IWarModelDao) session.createNativeQuery(queryString)
-                    .addEntity("WarModelMongoDao", WarModelMongoDao.class)
+                    .addEntity("WarModelDao", WarModelDao.class)
                     .uniqueResult();
             tx.commit();
         } catch(Exception ex) {

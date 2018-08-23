@@ -1,4 +1,4 @@
-package db.dal.entities.mongo;
+package db.dal.entities.impl;
 
 import db.dal.entities.*;
 import org.hibernate.ogm.datastore.document.options.AssociationStorage;
@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name="war_model")
 @AssociationStorage(AssociationStorageType.IN_ENTITY)
 @AssociationDocumentStorage(AssociationDocumentStorageType.GLOBAL_COLLECTION)
-public class WarModelMongoDao implements IWarModelDao, Serializable{
+public class WarModelDao implements IWarModelDao, Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -33,16 +33,16 @@ public class WarModelMongoDao implements IWarModelDao, Serializable{
     @Column(name="destructed_launchers")
     private int destructedLaunchers;
 
-    @OneToMany(mappedBy = "warModel", cascade = CascadeType.ALL)
-    private List<MissileMongoDao> missileList;
-    @OneToMany(mappedBy = "warModel", cascade = CascadeType.ALL)
-    private List<MissileLauncherMongoDao> missileLauncherList;
-    @OneToMany(mappedBy = "warModel", cascade = CascadeType.ALL)
-    private List<HiddenMissileLauncherMongoDao> hiddenMissileLauncherList;
-    @OneToMany(mappedBy = "warModel", cascade = CascadeType.ALL)
-    private List<MissileDestructorMongoDao> missileDestructorList;
-    @OneToMany(mappedBy = "warModel", cascade = CascadeType.ALL)
-    private List<LauncherDestructorMongoDao> launcherDestructorList;
+    @OneToMany(mappedBy = "warModel", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<MissileDao> missileList;
+    @OneToMany(mappedBy = "warModel", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<MissileLauncherDao> missileLauncherList;
+    @OneToMany(mappedBy = "warModel", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<HiddenMissileLauncherDao> hiddenMissileLauncherList;
+    @OneToMany(mappedBy = "warModel", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<MissileDestructorDao> missileDestructorList;
+    @OneToMany(mappedBy = "warModel", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<LauncherDestructorDao> launcherDestructorList;
 
     @Override
     public int getId() {
@@ -121,7 +121,7 @@ public class WarModelMongoDao implements IWarModelDao, Serializable{
     public void setMissileList(List<IMissileDao> missileList) {
         this.missileList = new LinkedList<>();
         for(IMissileDao m : missileList)
-            this.missileList.add((MissileMongoDao) m);
+            this.missileList.add((MissileDao) m);
     }
 
     @Override
@@ -133,7 +133,7 @@ public class WarModelMongoDao implements IWarModelDao, Serializable{
     public void setMissileLauncherList(List<IMissileLauncherDao> missileLauncherList) {
         this.missileLauncherList = new LinkedList<>();
         for(IMissileLauncherDao ml : missileLauncherList)
-            this.missileLauncherList.add((MissileLauncherMongoDao)ml);
+            this.missileLauncherList.add((MissileLauncherDao)ml);
     }
 
     @Override
@@ -145,7 +145,7 @@ public class WarModelMongoDao implements IWarModelDao, Serializable{
     public void setHiddenMissileLauncherList(List<IHiddenMissileLauncherDao> hiddenMissileLauncherList) {
         this.hiddenMissileLauncherList = new LinkedList<>();
         for(IHiddenMissileLauncherDao hml : hiddenMissileLauncherList)
-            this.hiddenMissileLauncherList.add((HiddenMissileLauncherMongoDao)hml);
+            this.hiddenMissileLauncherList.add((HiddenMissileLauncherDao)hml);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class WarModelMongoDao implements IWarModelDao, Serializable{
     public void setMissileDestructorList(List<IMissileDestructorDao> missileDestructorList) {
         this.missileDestructorList = new LinkedList<>();
         for(IMissileDestructorDao md : missileDestructorList)
-            this.missileDestructorList.add((MissileDestructorMongoDao)md);
+            this.missileDestructorList.add((MissileDestructorDao)md);
     }
 
     @Override
@@ -169,17 +169,17 @@ public class WarModelMongoDao implements IWarModelDao, Serializable{
     public void setLauncherDestructorList(List<ILauncherDestructorDao> launcherDestructorList) {
         this.launcherDestructorList = new LinkedList<>();
         for(ILauncherDestructorDao ld : launcherDestructorList)
-            this.launcherDestructorList.add((LauncherDestructorMongoDao)ld);
+            this.launcherDestructorList.add((LauncherDestructorDao)ld);
     }
 
     @Override
     public boolean equals(Object obj) {
         if(obj == null)
             return false;
-        if(!(obj instanceof WarModelMongoDao))
+        if(!(obj instanceof WarModelDao))
             return false;
 
-        WarModelMongoDao m = (WarModelMongoDao)obj;
+        WarModelDao m = (WarModelDao)obj;
         if(this.getwMId() == m.getwMId())
             return true;
 

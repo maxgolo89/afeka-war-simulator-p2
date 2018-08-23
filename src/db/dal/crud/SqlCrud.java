@@ -2,7 +2,7 @@ package db.dal.crud;
 
 import db.dal.commons.CrudConstants;
 import db.dal.entities.*;
-import db.dal.entities.sql.*;
+import db.dal.entities.impl.*;
 import org.hibernate.*;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.SessionFactoryBuilder;
@@ -38,12 +38,12 @@ public class SqlCrud implements ICrud {
                         .build();
 
                 factory = new MetadataSources(serviceRegistry)
-                        .addAnnotatedClass(MissileSqlDao.class)
-                        .addAnnotatedClass(MissileLauncherSqlDao.class)
-                        .addAnnotatedClass(MissileDestructorSqlDao.class)
-                        .addAnnotatedClass(LauncherDestructorSqlDao.class)
-                        .addAnnotatedClass(WarModelSqlDao.class)
-                        .addAnnotatedClass(HiddenMissileLauncherSqlDao.class)
+                        .addAnnotatedClass(MissileDao.class)
+                        .addAnnotatedClass(MissileLauncherDao.class)
+                        .addAnnotatedClass(MissileDestructorDao.class)
+                        .addAnnotatedClass(LauncherDestructorDao.class)
+                        .addAnnotatedClass(WarModelDao.class)
+                        .addAnnotatedClass(HiddenMissileLauncherDao.class)
                         .buildMetadata()
                         .getSessionFactoryBuilder()
                         .unwrap(SessionFactoryBuilder.class)
@@ -64,17 +64,17 @@ public class SqlCrud implements ICrud {
         try {
             tx = session.beginTransaction();
             if(daoObj instanceof IWarModelDao) {
-                id = (int)session.save((WarModelSqlDao)daoObj);
+                id = (int)session.save((WarModelDao)daoObj);
             } else if(daoObj instanceof IMissileDao) {
-                id = (int)session.save((MissileSqlDao)daoObj);
+                id = (int)session.save((MissileDao)daoObj);
             } else if(daoObj instanceof IMissileLauncherDao) {
-                id = (int)session.save((MissileLauncherSqlDao)daoObj);
+                id = (int)session.save((MissileLauncherDao)daoObj);
             } else if(daoObj instanceof IHiddenMissileLauncherDao) {
-                id = (int)session.save((HiddenMissileLauncherSqlDao)daoObj);
+                id = (int)session.save((HiddenMissileLauncherDao)daoObj);
             } else if(daoObj instanceof IMissileDestructorDao) {
-                id = (int)session.save((MissileDestructorSqlDao)daoObj);
+                id = (int)session.save((MissileDestructorDao)daoObj);
             } else if(daoObj instanceof ILauncherDestructorDao){
-                id = (int)session.save((LauncherDestructorSqlDao)daoObj);
+                id = (int)session.save((LauncherDestructorDao)daoObj);
             }
             tx.commit();
         } catch(Exception ex) {
@@ -124,12 +124,12 @@ public class SqlCrud implements ICrud {
     public IWarModelDao readWarModelById(long wid) {
         Session session = factory.openSession();
         Transaction tx = null;
-        WarModelSqlDao warModelSqlDao = null;
+        WarModelDao warModelSqlDao = null;
         try {
-            warModelSqlDao = (WarModelSqlDao)session.createQuery(
+            warModelSqlDao = (WarModelDao)session.createQuery(
                     "SELECT w " +
-                            "FROM war_model w " +
-                            "WHERE w.war_model_id LIKE :aId").setParameter("aId", wid).list().get(0);
+                            "FROM WarModelDao w " +
+                            "WHERE w.wMId LIKE :aId").setParameter("aId", wid).list().get(0);
             tx.commit();
         } catch (Exception ex) {
             if(tx != null)
@@ -147,33 +147,7 @@ public class SqlCrud implements ICrud {
     }
 
     @Override
-    public List<IMissileDao> readMissileByWarModel(long wid) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        List<MissileSqlDao> missileSqlDaoList = null;
-        List<IMissileDao> missileDaoList = null;
-        try {
-            missileSqlDaoList = (List<MissileSqlDao>)session.createQuery(
-                    "SELECT m " +
-                            "FROM missile m " +
-                            "WHERE m.war_model_id LIKE :aId")
-                    .setParameter("aId", wid)
-                    .list();
-            tx.commit();
-
-            if(missileSqlDaoList == null)
-                return null;
-
-            missileDaoList = new LinkedList<>(missileSqlDaoList);
-        } catch (Exception ex) {
-            if(tx != null)
-                tx.rollback();
-            logger.error(ex);
-        } finally {
-            session.close();
-            return missileDaoList;
-        }
-    }
+    public List<IMissileDao> readMissileByWarModel(long wid) { return null; }
 
     @Override
     public List<IMissileLauncherDao> readMissileLauncherById(String id) {
@@ -181,33 +155,7 @@ public class SqlCrud implements ICrud {
     }
 
     @Override
-    public List<IMissileLauncherDao> readMissileLauncherByWarModel(long wid) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        List<MissileLauncherSqlDao> missileLauncherSqlDaoList = null;
-        List<IMissileLauncherDao> missileLauncherDaoList = null;
-        try {
-            missileLauncherSqlDaoList = (List<MissileLauncherSqlDao>)session.createQuery(
-                    "SELECT ml " +
-                            "FROM missile_launcher ml " +
-                            "WHERE ml.war_model_id LIKE :aId")
-                    .setParameter("aId", wid)
-                    .list();
-            tx.commit();
-
-            if(missileLauncherSqlDaoList == null)
-                return null;
-
-            missileLauncherDaoList = new LinkedList<>(missileLauncherSqlDaoList);
-        } catch (Exception ex) {
-            if(tx != null)
-                tx.rollback();
-            logger.error(ex);
-        } finally {
-            session.close();
-            return missileLauncherDaoList;
-        }
-    }
+    public List<IMissileLauncherDao> readMissileLauncherByWarModel(long wid) { return null; }
 
     @Override
     public List<IHiddenMissileLauncherDao> readHiddenMissileLauncherById(String id) {
@@ -215,33 +163,7 @@ public class SqlCrud implements ICrud {
     }
 
     @Override
-    public List<IHiddenMissileLauncherDao> readHiddenMissileLauncherByWarModel(long wid) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        List<HiddenMissileLauncherSqlDao> hiddenMissileLauncherSqlDaoList = null;
-        List<IHiddenMissileLauncherDao> hiddenMissileLauncherDaoList = null;
-        try {
-            hiddenMissileLauncherSqlDaoList = (List<HiddenMissileLauncherSqlDao>)session.createQuery(
-                    "SELECT hml " +
-                            "FROM hidden_missile_launcher hml " +
-                            "WHERE hml.war_model_id LIKE :aId")
-                    .setParameter("aId", wid)
-                    .list();
-            tx.commit();
-
-            if(hiddenMissileLauncherSqlDaoList == null)
-                return null;
-
-            hiddenMissileLauncherDaoList = new LinkedList<>(hiddenMissileLauncherSqlDaoList);
-        } catch (Exception ex) {
-            if(tx != null)
-                tx.rollback();
-            logger.error(ex);
-        } finally {
-            session.close();
-            return hiddenMissileLauncherDaoList;
-        }
-    }
+    public List<IHiddenMissileLauncherDao> readHiddenMissileLauncherByWarModel(long wid) { return null; }
 
     @Override
     public List<IMissileDestructorDao> readMissileDestructorById(String id) {
@@ -249,33 +171,7 @@ public class SqlCrud implements ICrud {
     }
 
     @Override
-    public List<IMissileDestructorDao> readMissileDestructorByWarModel(long wid) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        List<MissileDestructorSqlDao> missileDestructorSqlDaoList = null;
-        List<IMissileDestructorDao> missileDestructorDaoList = null;
-        try {
-            missileDestructorSqlDaoList = (List<MissileDestructorSqlDao>)session.createQuery(
-                    "SELECT md " +
-                            "FROM missile_destructor md " +
-                            "WHERE md.war_model_id LIKE :aId")
-                    .setParameter("aId", wid)
-                    .list();
-            tx.commit();
-
-            if(missileDestructorSqlDaoList == null)
-                return null;
-
-            missileDestructorDaoList = new LinkedList<>(missileDestructorSqlDaoList);
-        } catch (Exception ex) {
-            if(tx != null)
-                tx.rollback();
-            logger.error(ex);
-        } finally {
-            session.close();
-            return missileDestructorDaoList;
-        }
-    }
+    public List<IMissileDestructorDao> readMissileDestructorByWarModel(long wid) { return null;}
 
     @Override
     public List<ILauncherDestructorDao> readLauncherDestructorById(String id) {
@@ -283,31 +179,5 @@ public class SqlCrud implements ICrud {
     }
 
     @Override
-    public List<ILauncherDestructorDao> readLauncherDestructorByWarModel(long wid) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        List<LauncherDestructorSqlDao> launcherDestructorSqlDaoList = null;
-        List<ILauncherDestructorDao> launcherDestructorDaoList = null;
-        try {
-            launcherDestructorSqlDaoList = (List<LauncherDestructorSqlDao>)session.createQuery(
-                    "SELECT ld " +
-                            "FROM launcher_destructor ld " +
-                            "WHERE ld.war_model_id LIKE :aId")
-                    .setParameter("aId", wid)
-                    .list();
-            tx.commit();
-
-            if(launcherDestructorSqlDaoList == null)
-                return null;
-
-            launcherDestructorDaoList = new LinkedList<>(launcherDestructorSqlDaoList);
-        } catch (Exception ex) {
-            if(tx != null)
-                tx.rollback();
-            logger.error(ex);
-        } finally {
-            session.close();
-            return launcherDestructorDaoList;
-        }
-    }
+    public List<ILauncherDestructorDao> readLauncherDestructorByWarModel(long wid) { return null; }
 }

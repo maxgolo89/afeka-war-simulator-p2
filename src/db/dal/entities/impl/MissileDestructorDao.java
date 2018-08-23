@@ -1,4 +1,4 @@
-package db.dal.entities.mongo;
+package db.dal.entities.impl;
 
 import db.dal.entities.IMissileDao;
 import db.dal.entities.IMissileDestructorDao;
@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name="missile_destructor")
 @AssociationStorage(AssociationStorageType.IN_ENTITY)
 @AssociationDocumentStorage(AssociationDocumentStorageType.GLOBAL_COLLECTION)
-public class MissileDestructorMongoDao implements IMissileDestructorDao, Serializable {
+public class MissileDestructorDao implements IMissileDestructorDao, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -25,11 +25,11 @@ public class MissileDestructorMongoDao implements IMissileDestructorDao, Seriali
     @Column(name="missile_destructor_id")
     private String mDId;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name="war_model_id")
-    private WarModelMongoDao warModel;
-    @OneToMany(mappedBy = "missileDestructor", cascade = CascadeType.ALL)
-    private List<MissileMongoDao> missileList;
+    private WarModelDao warModel;
+    @OneToMany(mappedBy = "missileDestructor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<MissileDao> missileList;
 
     @Override
     public int getId() {
@@ -58,7 +58,7 @@ public class MissileDestructorMongoDao implements IMissileDestructorDao, Seriali
 
     @Override
     public void setWarModel(IWarModelDao warModel) {
-        this.warModel = (WarModelMongoDao) warModel;
+        this.warModel = (WarModelDao) warModel;
     }
 
     @Override
@@ -70,17 +70,17 @@ public class MissileDestructorMongoDao implements IMissileDestructorDao, Seriali
     public void setMissileList(List<IMissileDao> missileList) {
         this.missileList = new LinkedList<>();
         for(IMissileDao m : missileList)
-            this.missileList.add((MissileMongoDao) m);
+            this.missileList.add((MissileDao) m);
     }
 
     @Override
     public boolean equals(Object obj) {
         if(obj == null)
             return false;
-        if(!(obj instanceof MissileDestructorMongoDao))
+        if(!(obj instanceof MissileDestructorDao))
             return false;
 
-        MissileDestructorMongoDao m = (MissileDestructorMongoDao)obj;
+        MissileDestructorDao m = (MissileDestructorDao)obj;
         if(this.getWarModel().getwMId() == m.getWarModel().getwMId() && this.getmDId().equals(m.getmDId()))
             return true;
 

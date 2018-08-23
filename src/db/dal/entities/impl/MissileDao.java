@@ -1,4 +1,4 @@
-package db.dal.entities.mongo;
+package db.dal.entities.impl;
 
 import db.dal.entities.*;
 import org.hibernate.ogm.datastore.document.options.AssociationStorage;
@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Table(name="missile")
 @AssociationStorage(AssociationStorageType.IN_ENTITY)
 @AssociationDocumentStorage(AssociationDocumentStorageType.GLOBAL_COLLECTION)
-public class MissileMongoDao implements IMissileDao, Serializable {
+public class MissileDao implements IMissileDao, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -31,18 +31,18 @@ public class MissileMongoDao implements IMissileDao, Serializable {
     @Column(name="is_destructed")
     private boolean isDestructed;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name="war_model_id")
-    private WarModelMongoDao warModel;
-    @ManyToOne(cascade = CascadeType.ALL)
+    private WarModelDao warModel;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name="missile_launcher_id")
-    private MissileLauncherMongoDao missileLauncher;
-    @ManyToOne(cascade = CascadeType.ALL)
+    private MissileLauncherDao missileLauncher;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name="hidden_missile_launcher_id")
-    private HiddenMissileLauncherMongoDao hiddenMissileLauncher;
-    @ManyToOne(cascade = CascadeType.ALL)
+    private HiddenMissileLauncherDao hiddenMissileLauncher;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name="missile_destructor_id")
-    private MissileDestructorMongoDao missileDestructor;
+    private MissileDestructorDao missileDestructor;
 
     @Override
     public String getmId() {
@@ -111,7 +111,7 @@ public class MissileMongoDao implements IMissileDao, Serializable {
 
     @Override
     public void setWarModel(IWarModelDao warModel) {
-        this.warModel = (WarModelMongoDao) warModel;
+        this.warModel = (WarModelDao) warModel;
     }
 
     @Override
@@ -121,7 +121,7 @@ public class MissileMongoDao implements IMissileDao, Serializable {
 
     @Override
     public void setMissileLauncher(IMissileLauncherDao missileLauncher) {
-        this.missileLauncher = (MissileLauncherMongoDao) missileLauncher;
+        this.missileLauncher = (MissileLauncherDao) missileLauncher;
     }
 
     @Override
@@ -131,7 +131,7 @@ public class MissileMongoDao implements IMissileDao, Serializable {
 
     @Override
     public void setHiddenMissileLauncher(IHiddenMissileLauncherDao hiddenMissileLauncher) {
-        this.hiddenMissileLauncher = (HiddenMissileLauncherMongoDao) hiddenMissileLauncher;
+        this.hiddenMissileLauncher = (HiddenMissileLauncherDao) hiddenMissileLauncher;
     }
 
     @Override
@@ -141,7 +141,7 @@ public class MissileMongoDao implements IMissileDao, Serializable {
 
     @Override
     public void setMissileDestructor(IMissileDestructorDao missileDestructor) {
-        this.missileDestructor = (MissileDestructorMongoDao) missileDestructor;
+        this.missileDestructor = (MissileDestructorDao) missileDestructor;
     }
 
     @Override
@@ -163,10 +163,10 @@ public class MissileMongoDao implements IMissileDao, Serializable {
     public boolean equals(Object obj) {
         if(obj == null)
             return false;
-        if(!(obj instanceof MissileMongoDao))
+        if(!(obj instanceof MissileDao))
             return false;
 
-        MissileMongoDao m = (MissileMongoDao)obj;
+        MissileDao m = (MissileDao)obj;
         if(this.getWarModel().getwMId() == m.getWarModel().getwMId() && this.getmId().equals(m.getmId()))
             return true;
 

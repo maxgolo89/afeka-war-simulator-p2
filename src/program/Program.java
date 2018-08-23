@@ -1,7 +1,6 @@
 package program;
 
 import ui.App;
-import ws.testWS;
 
 import java.util.Scanner;
 

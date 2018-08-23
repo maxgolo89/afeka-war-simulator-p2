@@ -1,7 +1,7 @@
 package db.dal.converter;
 
 import db.dal.entities.*;
-import db.dal.entities.sql.*;
+import db.dal.entities.impl.*;
 import program.IConstants;
 
 /*************************************************************************************
@@ -17,7 +17,7 @@ public class ObjectToDaoConverter implements IObjectToDaoConverter {
      ************/
     @Override
     public IMissileDao toMissileDao(String id, String destination, int flyTime, int damage, int potentialDamage, boolean isDestructed) {
-        IMissileDao m = new MissileSqlDao();
+        IMissileDao m = new MissileDao();
         m.setmId(id);
         m.setDestination(destination);
         m.setFlyTime(flyTime);
@@ -29,14 +29,14 @@ public class ObjectToDaoConverter implements IObjectToDaoConverter {
 
     @Override
     public IMissileDestructorDao toMissileDestructorDao(String id) {
-        IMissileDestructorDao md = new MissileDestructorSqlDao();
+        IMissileDestructorDao md = new MissileDestructorDao();
         md.setmDId(id);
         return md;
     }
 
     @Override
     public IMissileLauncherDao toMissileLauncherDao(String id, boolean isDestructed) {
-        IMissileLauncherDao ml = new MissileLauncherSqlDao();
+        IMissileLauncherDao ml = new MissileLauncherDao();
         ml.setmLId(id);
         ml.setDestructed(isDestructed);
         return ml;
@@ -44,7 +44,7 @@ public class ObjectToDaoConverter implements IObjectToDaoConverter {
 
     @Override
     public IHiddenMissileLauncherDao toHiddenMissileLauncherDao(String id, boolean isDestructed, boolean isHiding) {
-        IHiddenMissileLauncherDao hml = new HiddenMissileLauncherSqlDao();
+        IHiddenMissileLauncherDao hml = new HiddenMissileLauncherDao();
         hml.setmLId(id);
         hml.setDestructed(isDestructed);
         hml.setHiding(isHiding);
@@ -53,7 +53,7 @@ public class ObjectToDaoConverter implements IObjectToDaoConverter {
 
     @Override
     public ILauncherDestructorDao toLauncherDestructorDao(String id, IConstants.LauncherDestructorType type) {
-        ILauncherDestructorDao ld = new LauncherDestructorSqlDao();
+        ILauncherDestructorDao ld = new LauncherDestructorDao();
         ld.setlDId(id);
         ld.setType(type == IConstants.LauncherDestructorType.SHIP ? LauncherDestructorTypeEnum.SHIP_E : LauncherDestructorTypeEnum.PLANE_E);
         return ld;
@@ -61,7 +61,7 @@ public class ObjectToDaoConverter implements IObjectToDaoConverter {
 
     @Override
     public IWarModelDao toWarModelDao(long id, int hits, int totalDamage, int launchedMissiles, int destructedMissiles, int destructedLaunchers) {
-        IWarModelDao w = new WarModelSqlDao();
+        IWarModelDao w = new WarModelDao();
         w.setwMId(id);
         w.setHits(hits);
         w.setTotalDamage(totalDamage);

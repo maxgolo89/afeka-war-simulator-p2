@@ -7,6 +7,7 @@ import db.dal.crud.MongoCrud;
 import db.dal.crud.SqlCrud;
 
 import static db.dal.factory.FactoryStateE.MONGODB_E;
+import static db.dal.factory.FactoryStateE.MYSQL_E;
 
 /*************************************************************************************
  *
@@ -17,7 +18,7 @@ import static db.dal.factory.FactoryStateE.MONGODB_E;
  * *********************************************************************************** */
 public class DalFactory {
     private static DalFactory factory = null;
-    private static FactoryStateE state = MONGODB_E; // Default MySQL
+    private static FactoryStateE state = MYSQL_E; // Default MySQL
 
     private DalFactory() {}
 
