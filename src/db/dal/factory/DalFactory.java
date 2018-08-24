@@ -16,25 +16,17 @@ import static db.dal.factory.FactoryStateE.MYSQL_E;
  *  current working state (MySql database / MongoDB database).
  *
  * *********************************************************************************** */
-public class DalFactory {
-    private static DalFactory factory = null;
-    private static FactoryStateE state = MYSQL_E; // Default MySQL
+public class DalFactory implements IDalFactory {
+    private FactoryStateE state = MYSQL_E; // Default MySQL
 
-    private DalFactory() {}
+    public DalFactory() {}
 
-    public static DalFactory getInstance() {
-        if(factory == null)
-            factory = new DalFactory();
-
-        return factory;
-    }
-
-    public static FactoryStateE getState() {
+    public FactoryStateE getState() {
         return state;
     }
 
-    public static void setState(FactoryStateE state) {
-        DalFactory.state = state;
+    public void setState(FactoryStateE state) {
+        this.state = state;
     }
 
     public ICrud getCrud() {

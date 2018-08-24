@@ -15,8 +15,11 @@ import org.hibernate.ogm.datastore.mongodb.MongoDBDialect;
 import org.hibernate.ogm.datastore.mongodb.MongoDBProperties;
 import org.hibernate.ogm.datastore.mongodb.impl.MongoDBDatastoreProvider;
 import org.hibernate.service.ServiceRegistry;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 
+@Component
 public class MongoCrud implements ICrud {
 
     private Logger logger = Logger.getLogger(MongoCrud.class);

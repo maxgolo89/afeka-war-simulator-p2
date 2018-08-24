@@ -10,10 +10,11 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.dialect.MySQL5Dialect;
 import org.hibernate.service.ServiceRegistry;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
-import java.util.LinkedList;
 import java.util.List;
 
+@Component
 public class SqlCrud implements ICrud {
     private Logger logger = Logger.getLogger(SqlCrud.class);
     private static SessionFactory factory = null;

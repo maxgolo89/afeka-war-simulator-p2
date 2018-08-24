@@ -1,69 +1,86 @@
 package db.app;
 
 import bl.WarModel;
+import db.dal.commons.NotImplemented;
 import db.dal.dbinterface.DalAppInterface;
 import db.dal.dbinterface.IDalAppInterface;
 import mvc.WarModelEventsListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import program.IConstants;
 
+@Component
 public class DbAppController implements WarModelEventsListener {
 
-    private static DbAppController      dbAppController     = null;
-    private static IDalAppInterface     dai                 = DalAppInterface.getInstance();
-    private static WarModel             warModel            = WarModel.getInstance();
+    @Autowired
+    private IDalAppInterface     dai;
+    private WarModel             warModel            = WarModel.getInstance();
 
-    private DbAppController() {
+    public DbAppController() {
         warModel.registerListener(this);
     }
 
-    public static DbAppController getInstance() {
-        if(dbAppController == null)
-            dbAppController = new DbAppController();
-        return dbAppController;
+    public IDalAppInterface getDai() {
+        return dai;
+    }
+
+    public void setDai(IDalAppInterface dai) {
+        this.dai = dai;
     }
 
     @Override
+    @NotImplemented
     public void addMissileLauncherInModel(String id, boolean isHidden) {
     }
 
     @Override
+    @NotImplemented
     public void addMissileDestructorInModel(String id) {
     }
 
     @Override
+    @NotImplemented
     public void addLauncherDestructorInModel(String id, IConstants.LauncherDestructorType type) {
     }
 
     @Override
+    @NotImplemented
     public void addMissileLaunchInModel(String launcherID, String missileID, int potentialDamage, String destination, int flyTime) {
     }
 
     @Override
+    @NotImplemented
     public void launcherStateChangedInModel(String launcherID, boolean isHidden) {
     }
 
     @Override
+    @NotImplemented
     public void startMissileLaunchInModel(String launcherID, String missileID, int flyTime, String destination) {
     }
 
     @Override
+    @NotImplemented
     public void endMissileLaunchInModel(String launcherID, String missileID, int damage, String destination) {
     }
 
     @Override
+    @NotImplemented
     public void startDestructLauncherInModel(String destructorID, String launcherID, int duration) {
 
     }
 
     @Override
+    @NotImplemented
     public void endDestructLauncherInModel(String destructorID, String launcherID, boolean isDestructed) {
     }
 
     @Override
+    @NotImplemented
     public void startDestructMissileInModel(String destructorID, String missileID, int duration) {
     }
 
     @Override
+    @NotImplemented
     public void endDestructMissileInModel(String destructorID, String missileID, boolean isDestructed) {
     }
 
@@ -74,6 +91,7 @@ public class DbAppController implements WarModelEventsListener {
     }
 
     @Override
+    @NotImplemented
     public void exitInModel() {
     }
 }

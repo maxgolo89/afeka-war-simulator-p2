@@ -4,34 +4,30 @@ import bl.*;
 import db.dal.converter.IObjectToDaoConverter;
 import db.dal.crud.ICrud;
 import db.dal.entities.*;
-import db.dal.factory.DalFactory;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+@Component
 public class DalAppInterface implements IDalAppInterface {
 
-    private Thread queryExecutor = null;
-    private static IDalAppInterface dalAppInterface         = null;
-    private ICrud crud                                      = null;
-    private IObjectToDaoConverter converter                      = null;
+    /* Wired by Spring */
+    @Autowired
+    private ICrud crud;
+    @Autowired
+    private IObjectToDaoConverter converter;
+
+    /* Query executor */
+    private Thread queryExecutor                            = null;
     protected BlockingQueue<IWarModelDao> workQueue         = null;
 
-    private DalAppInterface() {
+    public DalAppInterface() {
         workQueue       = new LinkedBlockingQueue<>();
-        crud            = DalFactory.getInstance().getCrud();
-        converter       = DalFactory.getInstance().getConverter();
         queryExecutor   = new Thread(new QueryExecutor(this));
-
         queryExecutor.start();
-    }
-
-    public static IDalAppInterface getInstance() {
-        if(dalAppInterface == null)
-            dalAppInterface = new DalAppInterface();
-        return dalAppInterface;
     }
 
     protected void performWrite() {

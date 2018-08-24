@@ -3,9 +3,12 @@
 import java.util.Vector;
 import bl.WarModel;
 import db.app.DbAppController;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import program.IConstants;
+import program.Program;
 import program.WarSchduler;
 import program.jsonParser;
+import spring.AppConfiguration;
 import ui.WarUI;
 
 
@@ -19,7 +22,10 @@ public class WarController implements WarModelEventsListener, WarUIEventsListene
 	public WarController( ) {
 		this.war = WarModel.getInstance();
 		war.registerListener(this);
-		DbAppController.getInstance(); // Initiate the DbAppController
+
+		/* Load DbAppController from spring context */
+		AnnotationConfigApplicationContext ctx = Program.getContext();
+		ctx.getBean("db_app_controller");
 	}
 	
 	public void addView( WarUI view ){
