@@ -14,8 +14,6 @@ public abstract class WarObject implements Runnable, BLConstants{
 	public WarObject() {
 		inWar = true;
 		waitingForWork = false;
-
-		logsGen.addWarObject(this);
 	}
 
 	public WarObject(String id, WarModel war){

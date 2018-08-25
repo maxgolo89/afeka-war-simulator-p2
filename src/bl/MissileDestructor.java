@@ -1,5 +1,7 @@
 package bl;
 
+import org.springframework.aop.framework.AopContext;
+
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
@@ -10,7 +12,6 @@ public class MissileDestructor extends WarObject {
 	private Queue<Missile> targets = new LinkedList<>();
 
 	public MissileDestructor() {
-		super();
 	}
 
 	public MissileDestructor(String id, WarModel war) {
@@ -53,8 +54,14 @@ public class MissileDestructor extends WarObject {
 				if (m.isDestructed())
 					success = true;		
 			}
-			
-			updateResults(m,  success);	
+
+			/** Very ugly solution but necessary.
+			 *  The spring aspect use proxy class created to hook the methods called.
+			 *  When a method A in class A is called from class B, the call is triggered through the aspect proxy,
+			 *  but when method A in class A is called from within class A, the proxy is bypassed because it is a direct call on 'this'.
+			 *  Therefore, the call to updateResults need to be hooked through the exposed proxy object. */
+			MissileDestructor md = (MissileDestructor) AopContext.currentProxy();
+			md.updateResults(m,  success);
 			
 		} catch (InterruptedException e) {e.printStackTrace();	}
 	}
@@ -62,8 +69,6 @@ public class MissileDestructor extends WarObject {
 	public void updateResults(Missile m, boolean success){
 		String missileID = m.getID();
 		war.missileDestructEnded(id, missileID, success);
-		
-		logsGen.afterMissileDestruct(this, missileID, success, m.getDamage());
 	}
 	
 	public boolean equals(Object obj) {

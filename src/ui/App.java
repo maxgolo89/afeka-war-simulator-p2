@@ -46,7 +46,11 @@ public class App extends Application {
 	        timer.start();
 			
 		} catch (FileNotFoundException e) {e.printStackTrace();
-		} catch (IOException e) {e.printStackTrace();}
+		} catch (IOException e) {e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println(e.getMessage());
+		}
 	}
 	
 	private class MyTimer extends AnimationTimer {

@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Vector;
 import mvc.WarModelEventsListener;
 import program.IConstants;
+import program.Program;
 
 public class WarModel implements IWar, BLConstants, IConstants {
 
@@ -48,9 +49,12 @@ public class WarModel implements IWar, BLConstants, IConstants {
 	public void addMissileLauncher(String id, boolean isHidden) {
 		MissileLauncher l;
 		if ( isHidden )
-			l = new HiddenMissileLauncher(id, war);
+			l = (HiddenMissileLauncher)Program.getContext().getBean("hidden_missile_launcher");
 		else
-			l = new MissileLauncher(id, war);
+			l = (MissileLauncher)Program.getContext().getBean("missile_launcher");
+
+		l.setId(id);
+		l.setWar(war);
 		
 		allLaunchers.add(l);
 		Thread launcherThread = new Thread(l);
@@ -60,7 +64,10 @@ public class WarModel implements IWar, BLConstants, IConstants {
 	}
 
 	public void addMissileDestructor(String id) {
-		MissileDestructor d = new MissileDestructor(id, war);
+		MissileDestructor d = (MissileDestructor)Program.getContext().getBean("missile_destructor");
+		d.setId(id);
+		d.setWar(war);
+
 		allMissileDestructors.add(d);
 		Thread missileDestructorThread = new Thread(d);
 		missileDestructorThread.start();	
@@ -69,7 +76,11 @@ public class WarModel implements IWar, BLConstants, IConstants {
 	}
 
 	public void addLauncherDestructor(String id, LauncherDestructorType type) {
-		LauncherDestructor d = new LauncherDestructor(id, type, war);
+		LauncherDestructor d = (LauncherDestructor)Program.getContext().getBean("launcher_destructor");
+		d.setId(id);
+		d.setType(type);
+		d.setWar(war);
+
 		allLauncherDestructors.add(d);
 		Thread launcherDestructorThread = new Thread(d);
 		launcherDestructorThread.start();	
@@ -85,7 +96,13 @@ public class WarModel implements IWar, BLConstants, IConstants {
 		if ( launcher == null )
 			return;
 		
-		Missile m = new Missile(missileID, potentialDamage, destination, flyTime, launcher);
+		Missile m = (Missile)Program.getContext().getBean("missile");
+		m.setId(missileID);
+		m.setPotentialDamage(potentialDamage);
+		m.setDestination(destination);
+		m.setFlyTime(flyTime);
+		m.setLauncher(launcher);
+
 		launcher.addMissileToLaunchQueue(m);
 		allMissiles.add(m);
 		fireAddMissileLaunch(launcherID, missileID, potentialDamage, destination, flyTime);

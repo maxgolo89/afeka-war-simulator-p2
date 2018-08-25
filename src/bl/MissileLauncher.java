@@ -3,12 +3,13 @@ package bl;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class MissileLauncher extends WarObject{
+public class MissileLauncher extends WarObject {
 	
 	private boolean			isDestructed;
 	private Queue<Missile>	missilesToLaunch = new LinkedList<>();
 
-	public MissileLauncher() {}
+	public MissileLauncher() {
+	}
 
 	public MissileLauncher(String id, WarModel war){
 		super(id, war);
@@ -49,9 +50,6 @@ public class MissileLauncher extends WarObject{
 
 	public void updateResults(boolean success, String destination, int damage, int flyTime, String missileID){
 		war.launchEnded(this, missileID, success, destination, damage, flyTime);
-		
-		int launchTime = war.getWarTimeInSeconds() - flyTime;
-		logsGen.endLaunch(missileID, id, destination, damage, flyTime, success, this, launchTime);
 	}
 	
 	public void destructLauncher(){

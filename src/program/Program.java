@@ -28,8 +28,13 @@ public class Program implements IConstants, CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
+	    try {
 
         javafx.application.Application.launch(App.class);
+        } catch (Exception ex) {
+	        ex.printStackTrace();
+	        System.out.println(ex.getMessage());
+        }
     }
 
     public static AnnotationConfigApplicationContext getContext() {
