@@ -25,7 +25,7 @@ public class WarController implements WarModelEventsListener, WarUIEventsListene
 
 		/* Load DbAppController from spring context */
 		AnnotationConfigApplicationContext ctx = Program.getContext();
-//		ctx.getBean("db_app_controller");
+		ctx.getBean("db_app_controller");
 	}
 	
 	public void addView( WarUI view ){
