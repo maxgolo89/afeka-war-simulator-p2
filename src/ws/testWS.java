@@ -1,6 +1,7 @@
 package ws;
 
 import static spark.Spark.get;
+import static spark.Spark.post;
 
 import bl.MissileLauncher;
 import bl.WarModel;
@@ -9,6 +10,9 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+import java.util.Map;
+import java.util.Set;
+
 public class testWS {
     private WarModel war;
 
@@ -16,19 +20,20 @@ public class testWS {
 
       war = WarModel.getInstance();
 
-      get("/addLauncher/:id/:isHidden", (request, response) -> {                                                                        // Expose basic commands to restful ws.
-          String id = request.params(":id");
-          String hidden = request.params(":isHidden");
+      post("/addMissileLauncher", ((request, response) -> {
+          String id = request.queryParams("id");
+          String hidden = request.queryParams("isHidden");
           boolean isHidden = false;
           if(hidden.equals("true")){
               isHidden = true;
           }
           war.addMissileLauncher(id,isHidden);
           return "Missile Launcher " + id + " started";
-      });
-      get("/addLauncherDestructor/:id/:type", (request, response) -> {
-          String id = request.params(":id");
-          String type = request.params(":type");
+      }));
+
+      post("/addLauncherDestructor", (request, response) -> {
+          String id = request.queryParams("id");
+          String type = request.queryParams("type");
           IConstants.LauncherDestructorType destructorType = IConstants.LauncherDestructorType.SHIP;
           if(type.equals("plane")){
               destructorType = IConstants.LauncherDestructorType.PLANE;

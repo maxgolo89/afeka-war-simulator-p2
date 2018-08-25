@@ -39,5 +39,6 @@ public class Program implements IConstants, CommandLineRunner {
 
     public static AnnotationConfigApplicationContext getContext() {
 	    return ctx;
+
     }
 }
