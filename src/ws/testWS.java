@@ -41,8 +41,8 @@ public class testWS {
           war.addLauncherDestructor(id,destructorType);
           return "Missile Launcher Destructor " + id + " started";
       });
-      get("/addMissileDestructor/:id", (request, response) -> {
-          String id = request.params(":id");
+      post("/addMissileDestructor", (request, response) -> {
+          String id = request.queryParams("id");
           war.addMissileDestructor(id);
           return "Missile Destructor " + id + " started";
       });
