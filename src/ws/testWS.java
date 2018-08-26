@@ -46,26 +46,33 @@ public class testWS {
           war.addMissileDestructor(id);
           return "Missile Destructor " + id + " started";
       });
-      get("/launchMissile/:launcherId/:missileId/:damage/:destination/:flyTime", (request, response) -> {
-          String launcherId = request.params(":launcherId");
-          String missileId = request.params(":missileId");
-          int damage = Integer.parseInt(request.params(":damage"));
-          String destination = request.params(":destination");
-          int flyTime = Integer.parseInt(request.params(":flyTime"));
+      post("/launchMissile", (request, response) -> {
+          String launcherId = request.queryParams("launcherId");
+          String missileId = request.queryParams("missileId");
+          int damage = Integer.parseInt(request.queryParams("damage"));
+          String destination = request.queryParams("destination");
+          int flyTime = Integer.parseInt(request.queryParams("flyTime"));
           war.addMissileLaunch(launcherId,missileId,damage,destination,flyTime);
-          return "Missile " + missileId + " launched from launcher " + launcherId + " flies towards " + destination + ", reach time : " + flyTime + ", pot. damage " + damage;
+          return "Missile " + missileId + " launched from launcher " + launcherId + " flies towards " + destination + ", fly time : " + flyTime + ", pot. damage " + damage;
       });
-      get("/destructMissile/:destructorId/:missileId", (request, response) -> {
-          String destructorId = request.params(":destructorId");
-          String missileId = request.params(":missileId");
+      post("/destructMissile", (request, response) -> {
+          String destructorId = request.queryParams("destructorId");
+          String missileId = request.queryParams("missileId");
           war.addMissileDestruct(destructorId,missileId);
-          return "trying to destruct missile " + missileId + " from missile destructor " + destructorId;
+          return "Trying to destruct missile " + missileId + " from missile destructor " + destructorId;
       });
-      get("/destructLauncher/:destructorId/:launcherId", (request, response) -> {
-          String launcherId = request.params(":launcherId");
-          String destructorId = request.params(":destructorId");
+      post("/destructLauncher", (request, response) -> {
+          String launcherId = request.queryParams("launcherId");
+          String destructorId = request.queryParams("destructorId");
           war.addLauncherDestruct(destructorId,launcherId);
-          return "trying to destruct launcher " + launcherId + " from missile launcher destructor " + destructorId;
+          return "Trying to destruct launcher " + launcherId + " from missile launcher destructor " + destructorId;
       });
+      get("/statistics", ((request, response) -> {
+          response.header("Access-Control-Allow-Origin", "*");
+          response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+          response.cookie("name","dadwwaw");
+          return war.getAllLaunchers();
+
+      }));
   }
 }

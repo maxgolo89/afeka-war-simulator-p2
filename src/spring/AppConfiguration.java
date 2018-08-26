@@ -34,7 +34,7 @@ public class AppConfiguration {
     @Bean(name="crud")
     @Scope("singleton")
     public ICrud crud() {
-        return new SqlCrud();
+        return new MongoCrud();
     }
 
     @Bean(name="db_app_interface")
