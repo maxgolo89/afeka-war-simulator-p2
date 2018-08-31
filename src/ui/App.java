@@ -11,6 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import mvc.WarController;
 import ws.testWS;
+import server.myServer;
 
 public class App extends Application {
 
@@ -20,6 +21,9 @@ public class App extends Application {
 	@Override
 	public void start(final Stage stage) throws Exception {
 
+
+		myServer server = new myServer();
+		server.start();
         testWS ws = new testWS();                                           // Start webservice
         ws.startWS();
 
